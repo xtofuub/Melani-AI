@@ -561,35 +561,48 @@ function VAFooter({ theme, serif, mono }) {
           {'7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 02 00 3e 00 01 00 00 00 b0 12 40 00 00 00 00 00 40 00 00 00 00 00 00 00 d0 41 00 00 00 00 00 00 '.repeat(30)}
         </div>
 
-        <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 80, alignItems: 'end' }}>
-          <Reveal y={30} duration={900}>
-          <div>
-            <div style={{ fontFamily: mono, fontSize: 11, letterSpacing: '0.18em', color: theme.accentSoft, marginBottom: 24 }}>
+        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: 960, margin: '0 auto' }}>
+          {/* ─── ROW 1: Headline ─── */}
+          <Reveal y={30} duration={900} as="div">
+            <div style={{
+              fontFamily: mono, fontSize: 11, letterSpacing: '0.22em',
+              color: theme.accentSoft, marginBottom: 22,
+            }}>
               — GET STARTED
             </div>
             <div
               style={{
                 fontFamily: serif,
-                fontSize: 'clamp(44px, 5vw, 72px)',
-                lineHeight: 1,
+                fontSize: 'clamp(44px, 5.4vw, 76px)',
+                lineHeight: 1.02,
                 letterSpacing: '-0.025em',
                 fontWeight: 400,
+                marginBottom: 22,
               }}
             >
               Stop staring at <em style={{ color: theme.accentSoft, fontStyle: 'italic' }}>sub_401ab0</em>.
               <br />
               Start asking it questions.
             </div>
-          </div>
-          <div>
-            <p style={{ fontSize: 16, color: 'rgba(250,250,249,0.7)', lineHeight: 1.6, marginBottom: 28, textWrap: 'pretty' }}>
-              See Binder against a real sample of yours. We'll walk through the analysis live and
-              set you up with a trial account afterwards.
+            <p style={{
+              fontSize: 17,
+              color: 'rgba(250,250,249,0.72)',
+              lineHeight: 1.55,
+              margin: '0 auto',
+              maxWidth: 560,
+              textWrap: 'pretty',
+            }}>
+              Book a live walkthrough against a real sample of yours. Trial account lands in your
+              inbox the same day.
             </p>
-            <div style={{ display: 'flex', gap: 12 }}>
+          </Reveal>
+
+          {/* ─── ROW 2: CTAs + Trust row ─── */}
+          <Reveal y={20} duration={800} delay={180} as="div">
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 40, flexWrap: 'wrap' }}>
               <button
                 style={{
-                  padding: '14px 24px',
+                  padding: '15px 26px',
                   borderRadius: 999,
                   background: theme.accent,
                   color: theme.paper,
@@ -598,12 +611,108 @@ function VAFooter({ theme, serif, mono }) {
                   fontWeight: 500,
                   cursor: 'pointer',
                   fontFamily: 'inherit',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  transition: 'transform .18s ease, box-shadow .18s ease',
+                  boxShadow: '0 0 0 0 rgba(154,52,18,0)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px -10px rgba(154,52,18,0.7)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 0 0 0 rgba(154,52,18,0)';
                 }}
               >
-                Request a demo →
+                Book a live demo
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 7h8m0 0L7.5 3.5M11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                style={{
+                  padding: '15px 26px',
+                  borderRadius: 999,
+                  background: 'transparent',
+                  color: theme.paper,
+                  border: '1px solid rgba(250,250,249,0.28)',
+                  fontSize: 15,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'background .15s ease, border-color .15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(250,250,249,0.06)';
+                  e.currentTarget.style.borderColor = 'rgba(250,250,249,0.55)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(250,250,249,0.28)';
+                }}
+              >
+                Start free trial
               </button>
             </div>
-          </div>
+
+            <div style={{
+              marginTop: 26,
+              display: 'flex',
+              gap: 24,
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              fontFamily: mono,
+              fontSize: 11,
+              letterSpacing: '0.12em',
+              color: 'rgba(250,250,249,0.5)',
+              textTransform: 'uppercase',
+            }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 6, height: 6, borderRadius: 999, background: '#4ade80', boxShadow: '0 0 8px #4ade80aa' }} />
+                No credit card
+              </span>
+              <span style={{ opacity: 0.4 }}>·</span>
+              <span>14-day trial</span>
+              <span style={{ opacity: 0.4 }}>·</span>
+              <span>SOC 2 Type II</span>
+              <span style={{ opacity: 0.4 }}>·</span>
+              <span>SSO &amp; SAML</span>
+            </div>
+
+            {/* Testimonial strip — centered under CTAs */}
+            <div style={{
+              marginTop: 56,
+              paddingTop: 40,
+              borderTop: '1px solid rgba(250,250,249,0.08)',
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+              <div style={{ maxWidth: 620, textAlign: 'center' }}>
+                <p style={{
+                  fontFamily: serif,
+                  fontStyle: 'italic',
+                  fontSize: 21,
+                  lineHeight: 1.45,
+                  color: 'rgba(250,250,249,0.9)',
+                  margin: 0,
+                  textWrap: 'pretty',
+                }}>
+                  "Cut our triage time from an afternoon to a coffee break."
+                </p>
+                <div style={{
+                  marginTop: 14,
+                  fontFamily: mono,
+                  fontSize: 11,
+                  letterSpacing: '0.16em',
+                  color: 'rgba(250,250,249,0.55)',
+                  textTransform: 'uppercase',
+                }}>
+                  Senior Malware Analyst · Fortune 100 FSI
+                </div>
+              </div>
+            </div>
           </Reveal>
         </div>
       </div>

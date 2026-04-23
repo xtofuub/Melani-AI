@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <!-- Production React — no dev overhead -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -24,16 +24,6 @@
     }
     em { font-style: italic; }
     a { color: inherit; }
-
-    /* Dark mode — toggled via .binder-dark on #root */
-    #root.binder-dark { background: #141211 !important; color: #ece9e0; }
-    #root.binder-dark [data-bd-paper]   { background: #1c1a18 !important; border-color: #2a2723 !important; }
-    #root.binder-dark [data-bd-bg]      { background: #141211 !important; }
-    #root.binder-dark [data-bd-ink]     { color: #ece9e0 !important; }
-    #root.binder-dark [data-bd-inksoft] { color: #c7c1b2 !important; }
-    #root.binder-dark [data-bd-muted]   { color: #8a857a !important; }
-    #root.binder-dark [data-bd-rule]    { border-color: #2a2723 !important; background-color: #2a2723 !important; }
-    #root.binder-dark [data-bd-cream]   { background: #23201d !important; }
   </style>
 </head>
 <body>
@@ -42,25 +32,20 @@
   <script>
     window.__BINDER_TWEAKS__ = { dark: false, showStrips: true };
     window.__applyBinderTweaks = function() {
-      const dark = window.__BINDER_TWEAKS__.dark;
-      document.getElementById('root').classList.toggle('binder-dark', !!dark);
-      document.body.style.background = dark ? '#141211' : '#f8f5ec';
+      document.getElementById('root').classList.toggle('binder-dark', !!window.__BINDER_TWEAKS__.dark);
+      document.body.style.background = window.__BINDER_TWEAKS__.dark ? '#141211' : '#f8f5ec';
     };
   </script>
 
-  <script type="text/babel" src="shared.jsx"></script>
-  <script type="text/babel" src="effects.jsx"></script>
-  <script type="text/babel" src="variation-a-part1.jsx"></script>
-  <script type="text/babel" src="variation-a-part2.jsx"></script>
+  <!-- Precompiled JS — no Babel at runtime -->
+  <script src="dist/shared.js"></script>
+  <script src="dist/effects.js"></script>
+  <script src="dist/variation-a-part1.js"></script>
+  <script src="dist/variation-a-part2.js"></script>
 
-  <script type="text/babel" data-presets="react">
-    function App() {
-      React.useEffect(() => {
-        window.__applyBinderTweaks && window.__applyBinderTweaks();
-      }, []);
-      return <VariationA />;
-    }
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  <script>
+    window.__applyBinderTweaks();
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(VariationA));
   </script>
 </body>
 </html>

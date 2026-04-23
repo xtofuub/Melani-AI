@@ -1,0 +1,6 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "framework": "vite",
+  "cleanUrls": true
+}

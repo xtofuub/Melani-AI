@@ -29,118 +29,199 @@ function VariationA() {
         position: 'relative',
       }}
     >
-      <VANav theme={theme} serif={serif} mono={mono} />
-      <VAHero theme={theme} serif={serif} sans={sans} mono={mono} />
+      <ScrollProgress color={theme.accent} />
+      <SectionBeacon
+        ids={['hero', 'story', 'problem', 'features', 'workflow', 'usecases', 'security', 'faq']}
+        labels={['Intro', 'Story', 'Problem', 'Features', 'Workflow', 'Use cases', 'Security', 'FAQ']}
+        accent={theme.accent} ink={theme.ink}
+      />
+      <VANav theme={theme} serif={serif} sans={sans} mono={mono} />
+      <section id="hero"><VAHero theme={theme} serif={serif} sans={sans} mono={mono} /></section>
       <VAMarquee theme={theme} mono={mono} />
-      <VAScrollStory theme={theme} serif={serif} mono={mono} />
-      <VAProblem theme={theme} serif={serif} mono={mono} />
-      <VAFeatures theme={theme} serif={serif} mono={mono} />
-      <VAWorkflow theme={theme} serif={serif} mono={mono} />
-      <VAUseCases theme={theme} serif={serif} mono={mono} />
-      <VASecurity theme={theme} serif={serif} mono={mono} />
-      <VAFaq theme={theme} serif={serif} mono={mono} />
+      <section id="story"><VAScrollStory theme={theme} serif={serif} mono={mono} /></section>
+      <section id="problem"><VAProblem theme={theme} serif={serif} mono={mono} /></section>
+      <section id="features"><VAFeatures theme={theme} serif={serif} mono={mono} /></section>
+      <section id="workflow"><VAWorkflow theme={theme} serif={serif} mono={mono} /></section>
+      <section id="usecases"><VAUseCases theme={theme} serif={serif} mono={mono} /></section>
+      <section id="security"><VASecurity theme={theme} serif={serif} mono={mono} /></section>
+      <section id="faq"><VAFaq theme={theme} serif={serif} mono={mono} /></section>
       <VAFooter theme={theme} serif={serif} mono={mono} />
     </div>
   );
 }
 
 // ───────────────────── NAV ─────────────────────
-function VANav({ theme, serif, mono }) {
+function VANav({ theme, serif, sans, mono }) {
   const [scrolled, setScrolled] = React.useState(false);
+  const [hoverIdx, setHoverIdx] = React.useState(-1);
+
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', onScroll);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const links = [
+    { label: 'Product', menu: true },
+    { label: 'Workflows', menu: false },
+    { label: 'Models', menu: false },
+    { label: 'Research', menu: true },
+    { label: 'Pricing', menu: false },
+  ];
+
   return (
     <div
       style={{
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        background: scrolled ? 'rgba(248, 245, 236, 0.82)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px) saturate(1.2)' : 'none',
-        borderBottom: scrolled ? `1px solid ${theme.rule}` : '1px solid transparent',
-        transition: 'all 0.3s ease',
+        background: scrolled ? 'rgba(248, 245, 236, 0.78)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(14px) saturate(1.3)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(14px) saturate(1.3)' : 'none',
+        borderBottom: `1px solid ${scrolled ? theme.rule : 'transparent'}`,
+        boxShadow: scrolled ? '0 1px 0 rgba(31,27,22,0.03), 0 8px 24px -16px rgba(31,27,22,0.12)' : 'none',
+        transition: 'background .25s ease, border-color .25s ease, box-shadow .25s ease',
       }}
     >
       <div
         style={{
           maxWidth: 1280,
           margin: '0 auto',
-          padding: '18px 48px',
+          padding: '14px 40px',
           display: 'flex',
           alignItems: 'center',
-          gap: 48,
+          gap: 36,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* ── Brand lockup ── */}
+        <a href="#" style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          textDecoration: 'none', color: theme.ink,
+        }}>
           <BinderMark theme={theme} />
-          <span style={{ fontFamily: serif, fontSize: 22, letterSpacing: '-0.02em' }}>
-            Binder
-          </span>
-        </div>
-        <div style={{ display: 'flex', gap: 32, flex: 1, fontSize: 14, color: theme.inkSoft }}>
-          {['Product', 'Workflows', 'Models', 'Research', 'Pricing'].map((l) => (
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+            <span style={{
+              fontFamily: serif,
+              fontSize: 22,
+              letterSpacing: 0,
+              fontWeight: 400,
+            }}>
+              Binder
+            </span>
+            <span style={{
+              fontFamily: mono,
+              fontSize: 9,
+              letterSpacing: '0.14em',
+              color: theme.inkSoft,
+              marginTop: 3,
+              textTransform: 'uppercase',
+              opacity: 0.72,
+            }}>
+              AI&nbsp;·&nbsp;Reverse&nbsp;Engineering
+            </span>
+          </div>
+        </a>
+
+        {/* ── Separator ── */}
+        <div style={{
+          width: 1, height: 22, background: theme.rule, opacity: 0.7,
+        }} />
+
+        {/* ── Primary nav ── */}
+        <nav style={{
+          display: 'flex', gap: 4, flex: 1,
+          fontFamily: sans, fontSize: 13.5, fontWeight: 500,
+          color: theme.inkSoft,
+        }}>
+          {links.map((l, i) => (
             <a
-              key={l}
+              key={l.label}
               href="#"
-              style={{ color: 'inherit', textDecoration: 'none', transition: 'color .15s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = theme.accent)}
-              onMouseLeave={(e) => (e.currentTarget.style.color = theme.inkSoft)}
+              onMouseEnter={() => setHoverIdx(i)}
+              onMouseLeave={() => setHoverIdx(-1)}
+              style={{
+                position: 'relative',
+                padding: '8px 14px',
+                borderRadius: 7,
+                color: hoverIdx === i ? theme.ink : theme.inkSoft,
+                background: hoverIdx === i ? 'rgba(31,27,22,0.04)' : 'transparent',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                transition: 'color .15s ease, background .15s ease',
+              }}
             >
-              {l}
+              {l.label}
+              {l.menu && (
+                <svg width="9" height="9" viewBox="0 0 10 10" fill="none" style={{
+                  opacity: 0.55,
+                  transform: hoverIdx === i ? 'translateY(1px)' : 'translateY(0)',
+                  transition: 'transform .15s ease',
+                }}>
+                  <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
             </a>
           ))}
+        </nav>
+
+        {/* ── Right cluster ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <a href="#" style={{
+            fontFamily: sans, fontSize: 13.5, fontWeight: 500,
+            color: theme.inkSoft, textDecoration: 'none',
+            transition: 'color .15s ease',
+          }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = theme.ink)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = theme.inkSoft)}
+          >
+            Sign in
+          </a>
+          <VAButton theme={theme}>Request a demo</VAButton>
         </div>
-        <a
-          href="#"
-          style={{ fontSize: 14, color: theme.inkSoft, textDecoration: 'none' }}
-        >
-          Sign in
-        </a>
-        <VAButton theme={theme}>Request a demo</VAButton>
       </div>
     </div>
   );
 }
 
-function BinderMark({ theme, size = 28 }) {
+function BinderMark({ theme, size = 32 }) {
   return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: 6,
-        background: theme.ink,
-        position: 'relative',
-        overflow: 'hidden',
-        flexShrink: 0,
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: `repeating-linear-gradient(90deg, transparent 0, transparent 2px, ${theme.accent} 2px, ${theme.accent} 3px)`,
-          opacity: 0.8,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'grid',
-          placeItems: 'center',
-          fontFamily: 'Instrument Serif, serif',
-          fontSize: size * 0.7,
-          color: theme.paper,
-          lineHeight: 1,
-          textShadow: '0 1px 0 rgba(0,0,0,0.4)',
-        }}
-      >
+    <div style={{
+      width: size, height: size,
+      borderRadius: 8,
+      background: `linear-gradient(145deg, #2a241d 0%, ${theme.ink} 55%, #0f0c09 100%)`,
+      position: 'relative',
+      flexShrink: 0,
+      boxShadow: `
+        0 0 0 1px rgba(31,27,22,0.85),
+        0 1px 0 rgba(255,255,255,0.08) inset,
+        0 6px 14px -6px rgba(31,27,22,0.45)
+      `,
+    }}>
+      {/* serif monogram */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'grid', placeItems: 'center',
+        fontFamily: 'Instrument Serif, serif',
+        fontStyle: 'italic',
+        fontSize: size * 0.62,
+        color: theme.paper,
+        lineHeight: 1,
+        letterSpacing: '-0.02em',
+        paddingBottom: size * 0.04,
+      }}>
         b
       </div>
+      {/* amber accent rule — bottom edge */}
+      <div style={{
+        position: 'absolute',
+        left: size * 0.22, right: size * 0.22, bottom: size * 0.18,
+        height: 1.5,
+        background: theme.accent,
+        borderRadius: 1,
+        opacity: 0.92,
+      }} />
     </div>
   );
 }
@@ -197,8 +278,6 @@ function VAButton({ theme, children, variant = 'primary', onClick, style }) {
 function VAHero({ theme, serif, sans, mono }) {
   return (
     <div style={{ position: 'relative', overflow: 'hidden', minHeight: 720 }}>
-      {/* WebGL hover field behind everything */}
-      <WebGLBackdrop />
       {/* Ambient binary strips — parallax-ish */}
       <div
         style={{
@@ -236,7 +315,12 @@ function VAHero({ theme, serif, sans, mono }) {
           zIndex: 2,
         }}
       >
-        <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 1fr', gap: 72, alignItems: 'center' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1.05fr 1fr',
+          gap: 72,
+          alignItems: 'center',
+        }}>
           {/* Left copy */}
           <div>
             <Reveal y={12} duration={600}>
@@ -323,18 +407,24 @@ function VAHero({ theme, serif, sans, mono }) {
                 textWrap: 'pretty',
               }}
             >
-              Binder is the AI analyst for reverse engineers. Upload an{' '}
+              Binder is the AI analyst for reverse engineers — and anyone trying to understand what a binary actually does. Upload an{' '}
               <code style={{ fontFamily: mono, fontSize: 16, color: theme.accent }}>.exe</code>,{' '}
               <code style={{ fontFamily: mono, fontSize: 16, color: theme.accent }}>.dll</code>, or{' '}
-              <code style={{ fontFamily: mono, fontSize: 16, color: theme.accent }}>.elf</code>{' '}
-              — then ask plain-English questions about its behavior, its logic, and what it
-              shouldn't be doing.
+              <code style={{ fontFamily: mono, fontSize: 16, color: theme.accent }}>.elf</code>
+              {' '}and ask in plain English. Get answers grounded in the exact bytes.
             </p>
             </Reveal>
 
             <Reveal delay={400} y={16}>
-            <div style={{ display: 'flex', gap: 12, marginTop: 40, alignItems: 'center' }}>
-              <VAButton theme={theme}>Request a demo</VAButton>
+            <div style={{
+              display: 'flex',
+              gap: 12,
+              marginTop: 40,
+              alignItems: 'center',
+            }}>
+              <VAButton theme={theme}>
+                Request a demo
+              </VAButton>
               <VAButton theme={theme} variant="ghost">
                 Watch a 90-sec walkthrough
               </VAButton>
@@ -342,10 +432,22 @@ function VAHero({ theme, serif, sans, mono }) {
             </Reveal>
 
             <Reveal delay={520} y={16}>
-            <div style={{ marginTop: 56, display: 'flex', gap: 36, fontSize: 12.5, color: theme.muted }}>
-              <Stat mono={mono} theme={theme} num="14×" label="Faster triage, on average" />
-              <Stat mono={mono} theme={theme} num="2.1M" label="Samples analyzed to date" />
-              <Stat mono={mono} theme={theme} num="SOC 2" label="Type II, in progress" />
+            <div style={{
+              marginTop: 56,
+              display: 'flex',
+              gap: 36,
+              fontSize: 12.5,
+              color: theme.muted,
+            }}>
+              <Stat mono={mono} theme={theme} label="Faster triage, on average">
+                <CountUp to={14} duration={1400} format={(n) => `${Math.round(n)}×`} />
+              </Stat>
+              <Stat mono={mono} theme={theme} label="Samples analyzed to date">
+                <CountUp to={2.1} duration={1800} format={(n) => `${n.toFixed(1)}M`} />
+              </Stat>
+              <Stat mono={mono} theme={theme} label="Type II, in progress">
+                <span>SOC&nbsp;2</span>
+              </Stat>
             </div>
             </Reveal>
           </div>
@@ -390,11 +492,11 @@ function VAHero({ theme, serif, sans, mono }) {
   );
 }
 
-function Stat({ num, label, mono, theme }) {
+function Stat({ num, label, mono, theme, children }) {
   return (
     <div>
       <div style={{ fontFamily: mono, fontSize: 22, color: theme.ink, fontWeight: 500 }}>
-        {num}
+        {children ?? num}
       </div>
       <div style={{ marginTop: 4, textWrap: 'pretty', maxWidth: 140 }}>{label}</div>
     </div>
@@ -475,7 +577,12 @@ function VAProblem({ theme, serif, mono }) {
     <div style={{ padding: '140px 48px' }}>
       <div style={{ maxWidth: 1120, margin: '0 auto' }}>
         <Reveal><SectionEyebrow mono={mono} theme={theme} num="02" text="THE PROMISE" /></Reveal>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 80, marginTop: 24 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1.2fr 1fr',
+          gap: 80,
+          marginTop: 24,
+        }}>
           <Reveal y={28} duration={800}><h2
             style={{
               fontFamily: serif,

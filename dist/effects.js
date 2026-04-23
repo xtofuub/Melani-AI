@@ -4,16 +4,24 @@ function WebGLBackdrop() {
   const canvasRef = React.useRef(null);
   const rafRef = React.useRef(0);
   const lastFrame = React.useRef(0);
-  const mouseRef = React.useRef({ x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, active: 0, ta: 0 });
+  const mouseRef = React.useRef({
+    x: 0.5,
+    y: 0.5,
+    tx: 0.5,
+    ty: 0.5,
+    active: 0,
+    ta: 0
+  });
   const startTime = React.useRef(performance.now());
-
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false });
+    const gl = canvas.getContext('webgl', {
+      antialias: false,
+      premultipliedAlpha: false
+    });
     if (!gl) return;
     gl.getExtension('OES_standard_derivatives');
-
     const vs = `
       attribute vec2 a_pos;
       varying vec2 v_uv;
@@ -97,52 +105,61 @@ function WebGLBackdrop() {
         gl_FragColor = vec4(col, 1.0);
       }
     `;
-
     const mkShader = (type, src) => {
       const s = gl.createShader(type);
-      gl.shaderSource(s, src); gl.compileShader(s); return s;
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
     };
     const prog = gl.createProgram();
     gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, vs));
     gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, fs));
-    gl.linkProgram(prog); gl.useProgram(prog);
-
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
     const buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const aPos = gl.getAttribLocation(prog, 'a_pos');
     gl.enableVertexAttribArray(aPos);
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-    const uTime   = gl.getUniformLocation(prog, 'u_time');
-    const uMouse  = gl.getUniformLocation(prog, 'u_mouse');
+    const uTime = gl.getUniformLocation(prog, 'u_time');
+    const uMouse = gl.getUniformLocation(prog, 'u_mouse');
     const uActive = gl.getUniformLocation(prog, 'u_active');
-    const uRes    = gl.getUniformLocation(prog, 'u_res');
+    const uRes = gl.getUniformLocation(prog, 'u_res');
 
     // Low-res canvas: 0.5× DPR so GPU barely notices it
     const resize = () => {
-      const dpr  = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const rect = canvas.getBoundingClientRect();
-      canvas.width  = Math.max(2, Math.floor(rect.width  * dpr));
+      canvas.width = Math.max(2, Math.floor(rect.width * dpr));
       canvas.height = Math.max(2, Math.floor(rect.height * dpr));
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
-    const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
-
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    resize();
     const container = canvas.parentElement;
-    const onMove  = (e) => { const r = container.getBoundingClientRect(); const m = mouseRef.current; m.tx = (e.clientX-r.left)/r.width; m.ty = 1-(e.clientY-r.top)/r.height; m.ta = 1; };
-    const onLeave = () => { mouseRef.current.ta = 0; };
+    const onMove = e => {
+      const r = container.getBoundingClientRect();
+      const m = mouseRef.current;
+      m.tx = (e.clientX - r.left) / r.width;
+      m.ty = 1 - (e.clientY - r.top) / r.height;
+      m.ta = 1;
+    };
+    const onLeave = () => {
+      mouseRef.current.ta = 0;
+    };
     container.addEventListener('pointermove', onMove);
     container.addEventListener('pointerleave', onLeave);
-
-    const render = (ts) => {
+    const render = ts => {
       rafRef.current = requestAnimationFrame(render);
       // Run full 60fps — smoothness > throttling for this shader
       lastFrame.current = ts;
       const t = (performance.now() - startTime.current) / 1000;
       const m = mouseRef.current;
       const k = 0.1;
-      m.x += (m.tx - m.x) * k; m.y += (m.ty - m.y) * k;
+      m.x += (m.tx - m.x) * k;
+      m.y += (m.ty - m.y) * k;
       m.active += (m.ta - m.active) * 0.07;
       gl.uniform1f(uTime, t);
       gl.uniform2f(uMouse, m.x, m.y);
@@ -151,7 +168,6 @@ function WebGLBackdrop() {
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     rafRef.current = requestAnimationFrame(render);
-
     return () => {
       cancelAnimationFrame(rafRef.current);
       ro.disconnect();
@@ -159,55 +175,83 @@ function WebGLBackdrop() {
       container.removeEventListener('pointerleave', onLeave);
     };
   }, []);
-
-  return (
-    <canvas ref={canvasRef} style={{
-      position: 'absolute', inset: 0, width: '100%', height: '100%',
-      pointerEvents: 'none', zIndex: 0,
-      imageRendering: 'auto', // GPU upscales the low-res canvas smoothly
-    }} />
-  );
+  return /*#__PURE__*/React.createElement("canvas", {
+    ref: canvasRef,
+    style: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      pointerEvents: 'none',
+      zIndex: 0,
+      imageRendering: 'auto' // GPU upscales the low-res canvas smoothly
+    }
+  });
 }
 
 // ──────────────────────────────────────────────────────────
 // Reveal — intersection-observed fade + rise
 // ──────────────────────────────────────────────────────────
-function Reveal({ children, delay = 0, y = 32, duration = 700, className, style, as: Tag = 'div' }) {
+function Reveal({
+  children,
+  delay = 0,
+  y = 32,
+  duration = 700,
+  className,
+  style,
+  as: Tag = 'div'
+}) {
   const ref = React.useRef(null);
   const [shown, setShown] = React.useState(false);
   React.useEffect(() => {
     if (!ref.current) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(true); return; }
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } }),
-      { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
-    );
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setShown(true);
+      return;
+    }
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) {
+        setShown(true);
+        io.disconnect();
+      }
+    }), {
+      threshold: 0.12,
+      rootMargin: '0px 0px -60px 0px'
+    });
     io.observe(ref.current);
     return () => io.disconnect();
   }, []);
-  return (
-    <Tag ref={ref} className={className} style={{
+  return /*#__PURE__*/React.createElement(Tag, {
+    ref: ref,
+    className: className,
+    style: {
       ...style,
       opacity: shown ? 1 : 0,
       transform: shown ? 'translateY(0)' : `translateY(${y}px)`,
       transition: `opacity ${duration}ms cubic-bezier(.2,.7,.2,1) ${delay}ms, transform ${duration}ms cubic-bezier(.2,.7,.2,1) ${delay}ms`,
-      willChange: 'opacity, transform',
-    }}>
-      {children}
-    </Tag>
-  );
+      willChange: 'opacity, transform'
+    }
+  }, children);
 }
-
-function RevealStagger({ children, base = 0, step = 80, y = 24 }) {
-  return React.Children.map(children, (child, i) => (
-    <Reveal delay={base + i * step} y={y} key={i}>{child}</Reveal>
-  ));
+function RevealStagger({
+  children,
+  base = 0,
+  step = 80,
+  y = 24
+}) {
+  return React.Children.map(children, (child, i) => /*#__PURE__*/React.createElement(Reveal, {
+    delay: base + i * step,
+    y: y,
+    key: i
+  }, child));
 }
 
 // ──────────────────────────────────────────────────────────
 // ScrollProgress — thin amber bar pinned to top of viewport
 // ──────────────────────────────────────────────────────────
-function ScrollProgress({ color = '#9a3412' }) {
+function ScrollProgress({
+  color = '#9a3412'
+}) {
   const [p, setP] = React.useState(0);
   React.useEffect(() => {
     const onScroll = () => {
@@ -216,47 +260,65 @@ function ScrollProgress({ color = '#9a3412' }) {
       setP(max > 0 ? Math.min(1, Math.max(0, d.scrollTop / max)) : 0);
     };
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, {
+      passive: true
+    });
     window.addEventListener('resize', onScroll);
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
   }, []);
-  return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, height: 2,
-      zIndex: 100, pointerEvents: 'none',
-      background: 'transparent',
-    }}>
-      <div style={{
-        height: '100%',
-        width: `${p * 100}%`,
-        background: `linear-gradient(90deg, transparent, ${color} 35%, ${color})`,
-        transition: 'width 80ms linear',
-        boxShadow: `0 0 8px ${color}55`,
-      }} />
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 2,
+      zIndex: 100,
+      pointerEvents: 'none',
+      background: 'transparent'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      width: `${p * 100}%`,
+      background: `linear-gradient(90deg, transparent, ${color} 35%, ${color})`,
+      transition: 'width 80ms linear',
+      boxShadow: `0 0 8px ${color}55`
+    }
+  }));
 }
 
 // ──────────────────────────────────────────────────────────
 // CountUp — animates a numeric target when the element enters view
 // Accepts a `format(n)` fn so we can render 2.1M, 14×, etc.
 // ──────────────────────────────────────────────────────────
-function CountUp({ to, duration = 1600, format = (n) => String(Math.round(n)), style, children }) {
+function CountUp({
+  to,
+  duration = 1600,
+  format = n => String(Math.round(n)),
+  style,
+  children
+}) {
   const ref = React.useRef(null);
   const [val, setVal] = React.useState(0);
   const [started, setStarted] = React.useState(false);
   React.useEffect(() => {
     if (!ref.current || started) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setVal(to); setStarted(true); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVal(to);
+      setStarted(true);
+      return;
+    }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
         if (e.isIntersecting) {
-          setStarted(true); io.disconnect();
+          setStarted(true);
+          io.disconnect();
           const t0 = performance.now();
-          const tick = (t) => {
+          const tick = t => {
             const k = Math.min(1, (t - t0) / duration);
             const e = 1 - Math.pow(1 - k, 3); // easeOutCubic
             setVal(to * e);
@@ -265,80 +327,112 @@ function CountUp({ to, duration = 1600, format = (n) => String(Math.round(n)), s
           requestAnimationFrame(tick);
         }
       });
-    }, { threshold: 0.4 });
+    }, {
+      threshold: 0.4
+    });
     io.observe(ref.current);
     return () => io.disconnect();
   }, [to, duration, started]);
-  return <span ref={ref} style={style}>{children ? children(val, format(val)) : format(val)}</span>;
+  return /*#__PURE__*/React.createElement("span", {
+    ref: ref,
+    style: style
+  }, children ? children(val, format(val)) : format(val));
 }
 
 // ──────────────────────────────────────────────────────────
 // WordScrub — reveals children words one by one as element enters view
 // ──────────────────────────────────────────────────────────
-function WordScrub({ text, as: Tag = 'span', step = 55, base = 0, style }) {
+function WordScrub({
+  text,
+  as: Tag = 'span',
+  step = 55,
+  base = 0,
+  style
+}) {
   const ref = React.useRef(null);
   const [shown, setShown] = React.useState(false);
   React.useEffect(() => {
     if (!ref.current) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(true); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } });
-    }, { threshold: 0.25 });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setShown(true);
+      return;
+    }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      });
+    }, {
+      threshold: 0.25
+    });
     io.observe(ref.current);
     return () => io.disconnect();
   }, []);
   const words = typeof text === 'string' ? text.split(' ') : [];
-  return (
-    <Tag ref={ref} style={style}>
-      {words.map((w, i) => (
-        <span key={i} style={{
-          display: 'inline-block',
-          opacity: shown ? 1 : 0,
-          filter: shown ? 'blur(0)' : 'blur(6px)',
-          transform: shown ? 'translateY(0)' : 'translateY(14px)',
-          transition: `opacity 650ms cubic-bezier(.2,.7,.2,1) ${base + i * step}ms,
+  return /*#__PURE__*/React.createElement(Tag, {
+    ref: ref,
+    style: style
+  }, words.map((w, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    style: {
+      display: 'inline-block',
+      opacity: shown ? 1 : 0,
+      filter: shown ? 'blur(0)' : 'blur(6px)',
+      transform: shown ? 'translateY(0)' : 'translateY(14px)',
+      transition: `opacity 650ms cubic-bezier(.2,.7,.2,1) ${base + i * step}ms,
                        transform 650ms cubic-bezier(.2,.7,.2,1) ${base + i * step}ms,
                        filter 650ms cubic-bezier(.2,.7,.2,1) ${base + i * step}ms`,
-          willChange: 'opacity, transform, filter',
-        }}>
-          {w}{i < words.length - 1 ? '\u00A0' : ''}
-        </span>
-      ))}
-    </Tag>
-  );
+      willChange: 'opacity, transform, filter'
+    }
+  }, w, i < words.length - 1 ? '\u00A0' : '')));
 }
 
 // ──────────────────────────────────────────────────────────
 // AmbientGlyphs — fixed-position floating hex bytes, pointer-parallax
 // Very subtle — adds depth without noise
 // ──────────────────────────────────────────────────────────
-function AmbientGlyphs({ count = 28, color = '#b8a77e' }) {
+function AmbientGlyphs({
+  count = 28,
+  color = '#b8a77e'
+}) {
   const wrapRef = React.useRef(null);
-  const mouseRef = React.useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  const mouseRef = React.useRef({
+    x: 0,
+    y: 0,
+    tx: 0,
+    ty: 0
+  });
   const glyphs = React.useMemo(() => {
     const hex = '0123456789abcdef';
-    const rnd = (n) => Math.floor(Math.random() * n);
-    return Array.from({ length: count }, (_, i) => ({
+    const rnd = n => Math.floor(Math.random() * n);
+    return Array.from({
+      length: count
+    }, (_, i) => ({
       id: i,
-      ch: Array.from({ length: 2 + rnd(3) }, () => hex[rnd(16)]).join(''),
+      ch: Array.from({
+        length: 2 + rnd(3)
+      }, () => hex[rnd(16)]).join(''),
       x: Math.random() * 100,
       y: Math.random() * 100,
-      z: 0.3 + Math.random() * 0.8,  // depth factor
+      z: 0.3 + Math.random() * 0.8,
+      // depth factor
       size: 10 + Math.random() * 7,
       drift: (Math.random() - 0.5) * 20,
       dur: 14 + Math.random() * 18,
-      delay: -Math.random() * 20,
+      delay: -Math.random() * 20
     }));
   }, [count]);
-
   React.useEffect(() => {
-    const onMove = (e) => {
+    const onMove = e => {
       const m = mouseRef.current;
-      m.tx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      m.tx = (e.clientX / window.innerWidth - 0.5) * 2;
       m.ty = (e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener('pointermove', onMove, { passive: true });
-
+    window.addEventListener('pointermove', onMove, {
+      passive: true
+    });
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
@@ -356,10 +450,7 @@ function AmbientGlyphs({ count = 28, color = '#b8a77e' }) {
       window.removeEventListener('pointermove', onMove);
     };
   }, []);
-
-  return (
-    <>
-      <style>{`
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, `
         @keyframes ambientDrift {
           0%   { transform: translate3d(calc(var(--mx, 0) * var(--pz) * -12px), calc(var(--my, 0) * var(--pz) * -12px), 0); opacity: 0; }
           15%  { opacity: var(--popacity, 0.22); }
@@ -367,52 +458,57 @@ function AmbientGlyphs({ count = 28, color = '#b8a77e' }) {
           85%  { opacity: var(--popacity, 0.22); }
           100% { transform: translate3d(calc(var(--mx, 0) * var(--pz) * -12px), calc(var(--my, 0) * var(--pz) * -12px - 36px), 0); opacity: 0; }
         }
-      `}</style>
-      <div
-        ref={wrapRef}
-        aria-hidden
-        style={{
-          position: 'fixed', inset: 0, zIndex: 0,
-          pointerEvents: 'none', overflow: 'hidden',
-        }}
-      >
-        {glyphs.map((g) => (
-          <span key={g.id} style={{
-            position: 'absolute',
-            left: `${g.x}%`, top: `${g.y}%`,
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: g.size,
-            color,
-            letterSpacing: '0.08em',
-            opacity: 0,
-            willChange: 'transform, opacity',
-            '--pz': g.z,
-            '--drift': `${g.drift}px`,
-            '--popacity': (0.14 + g.z * 0.14).toFixed(3),
-            animation: `ambientDrift ${g.dur}s linear ${g.delay}s infinite`,
-          }}>
-            {g.ch}
-          </span>
-        ))}
-      </div>
-    </>
-  );
+      `), /*#__PURE__*/React.createElement("div", {
+    ref: wrapRef,
+    "aria-hidden": true,
+    style: {
+      position: 'fixed',
+      inset: 0,
+      zIndex: 0,
+      pointerEvents: 'none',
+      overflow: 'hidden'
+    }
+  }, glyphs.map(g => /*#__PURE__*/React.createElement("span", {
+    key: g.id,
+    style: {
+      position: 'absolute',
+      left: `${g.x}%`,
+      top: `${g.y}%`,
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: g.size,
+      color,
+      letterSpacing: '0.08em',
+      opacity: 0,
+      willChange: 'transform, opacity',
+      '--pz': g.z,
+      '--drift': `${g.drift}px`,
+      '--popacity': (0.14 + g.z * 0.14).toFixed(3),
+      animation: `ambientDrift ${g.dur}s linear ${g.delay}s infinite`
+    }
+  }, g.ch))));
 }
 
 // ──────────────────────────────────────────────────────────
 // MagneticWrap — child element drifts subtly toward cursor
 // ──────────────────────────────────────────────────────────
-function MagneticWrap({ children, strength = 0.35, style }) {
+function MagneticWrap({
+  children,
+  strength = 0.35,
+  style
+}) {
   const ref = React.useRef(null);
   React.useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const onMove = e => {
       const r = el.getBoundingClientRect();
       const dx = (e.clientX - (r.left + r.width / 2)) * strength;
       const dy = (e.clientY - (r.top + r.height / 2)) * strength;
       el.style.transform = `translate(${dx}px, ${dy}px)`;
     };
-    const onLeave = () => { el.style.transform = 'translate(0,0)'; };
+    const onLeave = () => {
+      el.style.transform = 'translate(0,0)';
+    };
     const parent = el.parentElement;
     if (!parent) return;
     parent.addEventListener('pointermove', onMove);
@@ -422,67 +518,93 @@ function MagneticWrap({ children, strength = 0.35, style }) {
       parent.removeEventListener('pointerleave', onLeave);
     };
   }, [strength]);
-  return (
-    <span ref={ref} style={{
+  return /*#__PURE__*/React.createElement("span", {
+    ref: ref,
+    style: {
       display: 'inline-block',
       transition: 'transform 220ms cubic-bezier(.2,.7,.2,1)',
       willChange: 'transform',
-      ...style,
-    }}>
-      {children}
-    </span>
-  );
+      ...style
+    }
+  }, children);
 }
 
 // ──────────────────────────────────────────────────────────
 // SectionBeacon — fixed right-side dots; highlights as sections cross viewport
 // ──────────────────────────────────────────────────────────
-function SectionBeacon({ ids, labels, accent = '#9a3412', ink = '#1f1b16' }) {
+function SectionBeacon({
+  ids,
+  labels,
+  accent = '#9a3412',
+  ink = '#1f1b16'
+}) {
   const [active, setActive] = React.useState(0);
   React.useEffect(() => {
     const onScroll = () => {
       const mid = window.innerHeight * 0.45;
-      let best = 0, bestDist = Infinity;
+      let best = 0,
+        bestDist = Infinity;
       ids.forEach((id, i) => {
         const el = document.getElementById(id);
         if (!el) return;
         const r = el.getBoundingClientRect();
         const d = Math.abs(r.top - mid);
-        if (r.top <= mid + 200 && d < bestDist) { bestDist = d; best = i; }
+        if (r.top <= mid + 200 && d < bestDist) {
+          bestDist = d;
+          best = i;
+        }
       });
       setActive(best);
     };
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, {
+      passive: true
+    });
     return () => window.removeEventListener('scroll', onScroll);
   }, [ids]);
-  return (
-    <div style={{
-      position: 'fixed', right: 22, top: '50%', transform: 'translateY(-50%)',
-      zIndex: 40, display: 'flex', flexDirection: 'column', gap: 14,
-      pointerEvents: 'auto',
-    }}>
-      {ids.map((id, i) => (
-        <a key={id} href={`#${id}`}
-           onClick={(e) => {
-             e.preventDefault();
-             document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-           }}
-           title={labels?.[i] || ''}
-           style={{
-              width: 8, height: 8, borderRadius: 999,
-              background: active === i ? accent : 'transparent',
-              border: `1.5px solid ${active === i ? accent : ink + '55'}`,
-              transition: 'all .25s ease',
-              transform: active === i ? 'scale(1.25)' : 'scale(1)',
-              display: 'block',
-            }} />
-      ))}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'fixed',
+      right: 22,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 40,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14,
+      pointerEvents: 'auto'
+    }
+  }, ids.map((id, i) => /*#__PURE__*/React.createElement("a", {
+    key: id,
+    href: `#${id}`,
+    onClick: e => {
+      e.preventDefault();
+      document.getElementById(id)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    },
+    title: labels?.[i] || '',
+    style: {
+      width: 8,
+      height: 8,
+      borderRadius: 999,
+      background: active === i ? accent : 'transparent',
+      border: `1.5px solid ${active === i ? accent : ink + '55'}`,
+      transition: 'all .25s ease',
+      transform: active === i ? 'scale(1.25)' : 'scale(1)',
+      display: 'block'
+    }
+  })));
 }
-
 Object.assign(window, {
-  WebGLBackdrop, Reveal, RevealStagger,
-  ScrollProgress, CountUp, WordScrub, AmbientGlyphs, MagneticWrap, SectionBeacon,
+  WebGLBackdrop,
+  Reveal,
+  RevealStagger,
+  ScrollProgress,
+  CountUp,
+  WordScrub,
+  AmbientGlyphs,
+  MagneticWrap,
+  SectionBeacon
 });

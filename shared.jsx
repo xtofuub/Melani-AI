@@ -44,65 +44,144 @@ function BinaryStrip({ speed = 40, opacity = 0.5, color = '#78716c', rows = 1, d
 // ChatDemo — animated chat unfolding an analysis conversation
 // variant: 'editorial' | 'terminal'
 // ──────────────────────────────────────────────────────────
-const ANALYSIS_SCRIPT = [
-  { from: 'user', text: 'What does this binary do?', delay: 0 },
+const ANALYSIS_SCRIPTS = [
   {
-    from: 'ai',
-    text: 'This is a 64-bit ELF compiled with GCC 11.4. The binary implements a small command-and-control client. It connects to a hardcoded C2 host, encrypts outbound traffic with RC4, and spawns a reverse shell on a specific command.',
-    cites: ['main+0x1a4', '.rodata:0x3c10', 'sub_401ab0'],
-    delay: 600,
+    file: 'stager_x64.elf',
+    type: 'ELF · 64-bit',
+    size: '412 KB',
+    steps: [
+      { from: 'user', text: 'What does this binary do?', delay: 0 },
+      {
+        from: 'ai',
+        text: 'A 64-bit ELF compiled with GCC 11.4. It implements a small command-and-control client — connects to a hardcoded C2 host, encrypts outbound traffic with RC4, spawns a reverse shell on a specific command.',
+        cites: ['main+0x1a4', '.rodata:0x3c10', 'sub_401ab0'],
+        delay: 600,
+      },
+      { from: 'user', text: 'Show me the C2 host.', delay: 400 },
+      {
+        from: 'ai',
+        text: 'Hardcoded in .rodata at 0x3c10:',
+        code: 'cmd.update-status.net:8443',
+        delay: 500,
+      },
+      { from: 'user', text: 'Rename sub_401ab0 to something descriptive.', delay: 400 },
+      {
+        from: 'ai',
+        text: 'Renamed to decrypt_and_execute. It XORs the payload with the 32-byte key at 0x4010, then jumps to the buffer.',
+        delay: 500,
+      },
+    ],
   },
-  { from: 'user', text: 'Show me the C2 host.', delay: 400 },
   {
-    from: 'ai',
-    text: 'Hardcoded in .rodata at 0x3c10:',
-    code: 'cmd.update-status.net:8443',
-    delay: 500,
+    file: 'update.dll',
+    type: 'PE32+ · DLL',
+    size: '284 KB',
+    steps: [
+      { from: 'user', text: 'Is this file malicious?', delay: 0 },
+      {
+        from: 'ai',
+        text: 'Yes — this is a Phobos-family ransomware loader. It enumerates local drives, encrypts files with AES-256-CBC, and appends .phobos to each filename.',
+        cites: ['CryptGenRandom', '.text:0x2a40', 'sub_10001b20'],
+        delay: 550,
+      },
+      { from: 'user', text: 'How does it manage the keys?', delay: 450 },
+      {
+        from: 'ai',
+        text: 'Per-file AES keys are generated with CryptGenRandom, then wrapped with a hardcoded RSA-2048 public key:',
+        code: 'RSA-2048 pubkey @ .rdata:0x4800',
+        delay: 500,
+      },
+      { from: 'user', text: 'Any way to recover files without paying?', delay: 450 },
+      {
+        from: 'ai',
+        text: "No implementation flaws in this variant — AES/RSA are used correctly. Don't pay. Restore from backup and scope the blast radius.",
+        delay: 500,
+      },
+    ],
   },
-  { from: 'user', text: 'Rename sub_401ab0 to something descriptive.', delay: 400 },
   {
-    from: 'ai',
-    text: 'Renamed to decrypt_and_execute. It XORs the payload with the 32-byte key at 0x4010, then jumps to the buffer.',
-    delay: 500,
+    file: 'firmware.bin',
+    type: 'ARM · Linux',
+    size: '6.2 MB',
+    steps: [
+      { from: 'user', text: 'Anything unusual about this firmware?', delay: 0 },
+      {
+        from: 'ai',
+        text: 'Stock Linux 4.14 for an ARM Cortex-A7 router, plus one extra service: telnetd-utility, listening on port 32764. It accepts an undocumented auth packet.',
+        cites: ['init.d/telnetd-utility', 'arm:0x80104c', 'sub_800c20'],
+        delay: 600,
+      },
+      { from: 'user', text: 'Show the backdoor trigger.', delay: 400 },
+      {
+        from: 'ai',
+        text: 'Magic dword, then XOR key against the next 8 bytes. If it matches the MAC, auth succeeds:',
+        code: 'magic=0x6d435344  key=0xDEADBEEF',
+        delay: 500,
+      },
+      { from: 'user', text: 'When was this planted?', delay: 400 },
+      {
+        from: 'ai',
+        text: 'Compile timestamp is 2023-08 — two years before public firmware first shipped this build. Worth a vendor disclosure.',
+        delay: 500,
+      },
+    ],
   },
 ];
 
-function ChatDemo({ variant = 'editorial', autoStart = true, compact = false }) {
-  const [shown, setShown] = React.useState(autoStart ? 0 : 0);
+function ChatDemo({ variant = 'editorial' }) {
+  const [scriptIdx, setScriptIdx] = React.useState(0);
+  const [shown, setShown] = React.useState(0);
+  const [visible, setVisible] = React.useState(true); // body opacity for cross-fade
   const ref = React.useRef(null);
   const started = React.useRef(false);
 
-  // Intersection observer — start when visible
+  const script = ANALYSIS_SCRIPTS[scriptIdx];
+  const steps = script.steps;
+
+  // Start when scrolled into view
   React.useEffect(() => {
     if (!ref.current) return;
     const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting && !started.current) {
-            started.current = true;
-            runScript();
-          }
-        });
-      },
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting && !started.current) {
+          started.current = true;
+          setShown(1);
+        }
+      }),
       { threshold: 0.2 }
     );
     io.observe(ref.current);
     return () => io.disconnect();
   }, []);
 
-  const runScript = () => {
-    let i = 0;
-    const tick = () => {
-      if (i >= ANALYSIS_SCRIPT.length) return;
-      const step = ANALYSIS_SCRIPT[i];
-      setTimeout(() => {
-        setShown((s) => i + 1);
-        i++;
-        tick();
-      }, 700 + (step.delay || 0));
-    };
-    tick();
-  };
+  // Drive the conversation forward + handle end-of-script → fade → next
+  React.useEffect(() => {
+    if (!started.current || shown === 0) return;
+
+    if (shown < steps.length) {
+      const step = steps[shown - 1];
+      const nextDelay = 1100 + (step.delay || 0);
+      const t = setTimeout(() => setShown(shown + 1), nextDelay);
+      return () => clearTimeout(t);
+    }
+
+    // Finished current script — pause, fade out, swap, fade in, restart
+    const pause = setTimeout(() => setVisible(false), 3200);
+    return () => clearTimeout(pause);
+  }, [shown, scriptIdx]);
+
+  // After fade-out completes, swap script and fade back in
+  React.useEffect(() => {
+    if (visible) return;
+    const t = setTimeout(() => {
+      setScriptIdx((i) => (i + 1) % ANALYSIS_SCRIPTS.length);
+      setShown(0);
+      setVisible(true);
+      // small breath before the new script starts typing
+      setTimeout(() => setShown(1), 450);
+    }, 650);
+    return () => clearTimeout(t);
+  }, [visible]);
 
   const styles = variant === 'editorial' ? editorialChatStyles : terminalChatStyles;
 
@@ -112,21 +191,40 @@ function ChatDemo({ variant = 'editorial', autoStart = true, compact = false }) 
         <div style={styles.headerDot} />
         <div style={styles.headerTitle}>
           <span style={{ opacity: 0.55 }}>analyzing</span>{' '}
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 500 }}>
-            stager_x64.elf
+          <span
+            key={script.file}
+            style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontWeight: 500,
+              animation: 'chat-in .45s cubic-bezier(.2,.8,.2,1) both',
+              display: 'inline-block',
+            }}
+          >
+            {script.file}
           </span>
         </div>
         <div style={styles.headerMeta}>
-          <span style={styles.pill}>ELF · 64-bit</span>
-          <span style={styles.pill}>412 KB</span>
+          <span key={script.type + 'a'} style={{ ...styles.pill, animation: 'chat-in .45s .05s cubic-bezier(.2,.8,.2,1) both' }}>
+            {script.type}
+          </span>
+          <span key={script.size + 'b'} style={{ ...styles.pill, animation: 'chat-in .45s .1s cubic-bezier(.2,.8,.2,1) both' }}>
+            {script.size}
+          </span>
         </div>
       </div>
 
-      <div style={styles.body}>
-        {ANALYSIS_SCRIPT.slice(0, shown).map((msg, i) => (
+      <div
+        key={scriptIdx}
+        style={{
+          ...styles.body,
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 500ms cubic-bezier(.2,.7,.2,1)',
+        }}
+      >
+        {steps.slice(0, shown).map((msg, i) => (
           <ChatMsg key={i} msg={msg} variant={variant} />
         ))}
-        {shown > 0 && shown < ANALYSIS_SCRIPT.length && (
+        {shown > 0 && shown < steps.length && (
           <div style={{ ...styles.msg, ...styles.typing }}>
             <span style={styles.dot1}>·</span>
             <span style={styles.dot2}>·</span>
@@ -394,4 +492,4 @@ function CursorGlow({ color = 'rgba(154, 52, 18, 0.08)', size = 500 }) {
   );
 }
 
-Object.assign(window, { BinaryStrip, ChatDemo, useInView, CursorGlow, ANALYSIS_SCRIPT });
+Object.assign(window, { BinaryStrip, ChatDemo, useInView, CursorGlow, ANALYSIS_SCRIPTS });
