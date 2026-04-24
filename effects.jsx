@@ -207,7 +207,7 @@ function RevealStagger({ children, base = 0, step = 80, y = 24 }) {
 // ──────────────────────────────────────────────────────────
 // ScrollProgress — thin amber bar pinned to top of viewport
 // ──────────────────────────────────────────────────────────
-function ScrollProgress({ color = '#9a3412' }) {
+function ScrollProgress({ color = '#5962B8' }) {
   const [p, setP] = React.useState(0);
   React.useEffect(() => {
     const onScroll = () => {
@@ -437,8 +437,9 @@ function MagneticWrap({ children, strength = 0.35, style }) {
 // ──────────────────────────────────────────────────────────
 // SectionBeacon — fixed right-side dots; highlights as sections cross viewport
 // ──────────────────────────────────────────────────────────
-function SectionBeacon({ ids, labels, accent = '#9a3412', ink = '#1f1b16' }) {
+function SectionBeacon({ ids, labels, accent = '#5962B8', ink = '#000000' }) {
   const [active, setActive] = React.useState(0);
+  const [visible, setVisible] = React.useState(() => typeof window === 'undefined' ? true : window.innerWidth >= 1180);
   React.useEffect(() => {
     const onScroll = () => {
       const mid = window.innerHeight * 0.45;
@@ -456,6 +457,12 @@ function SectionBeacon({ ids, labels, accent = '#9a3412', ink = '#1f1b16' }) {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [ids]);
+  React.useEffect(() => {
+    const onResize = () => setVisible(window.innerWidth >= 1180);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+  if (!visible) return null;
   return (
     <div style={{
       position: 'fixed', right: 22, top: '50%', transform: 'translateY(-50%)',

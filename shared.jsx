@@ -3,7 +3,7 @@
 // ──────────────────────────────────────────────────────────
 // BinaryStrip — animated horizontal scrolling hex bytes
 // ──────────────────────────────────────────────────────────
-function BinaryStrip({ speed = 40, opacity = 0.5, color = '#78716c', rows = 1, density = 80 }) {
+function BinaryStrip({ speed = 40, opacity = 0.5, color = '#71717a', rows = 1, density = 80 }) {
   const hex = React.useMemo(() => {
     const chars = '0123456789abcdef';
     const out = [];
@@ -128,7 +128,200 @@ const ANALYSIS_SCRIPTS = [
   },
 ];
 
-function ChatDemo({ variant = 'editorial' }) {
+function getResponsiveState() {
+  if (typeof window === 'undefined') {
+    return { width: 1440, isMobile: false, isTablet: false, isDesktop: true };
+  }
+  const width = window.innerWidth;
+  return {
+    width,
+    isMobile: width < 768,
+    isTablet: width < 1100,
+    isDesktop: width >= 1100,
+  };
+}
+
+function useResponsive() {
+  const [layout, setLayout] = React.useState(getResponsiveState);
+
+  React.useEffect(() => {
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setLayout(getResponsiveState()));
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  return layout;
+}
+
+const defaultChatTheme = {
+  paper: '#ffffff',
+  panel: '#f8f8fa',
+  cream: '#f4f4f5',
+  ink: '#09090b',
+  inkSoft: '#27272a',
+  muted: '#71717a',
+  rule: '#e4e4e7',
+  accent: '#5962B8',
+  accentRing: 'rgba(89,98,184,0.14)',
+  elevatedShadow: '0 30px 80px -30px rgba(0,0,0,0.16), 0 10px 30px -15px rgba(0,0,0,0.08)',
+  solid: '#000000',
+  solidText: '#ffffff',
+  terminalAccent: '#5962B8',
+  terminalWrap: '#ffffff',
+  terminalBorder: '#e4e4e7',
+};
+
+function resolveChatTheme(theme) {
+  return { ...defaultChatTheme, ...(theme || {}) };
+}
+
+function getEditorialChatStyles(theme) {
+  const t = resolveChatTheme(theme);
+  return {
+    wrap: {
+      background: t.paper,
+      border: `1px solid ${t.rule}`,
+      borderRadius: 14,
+      overflow: 'hidden',
+      boxShadow: t.elevatedShadow,
+      fontFamily: 'Space Grotesk, -apple-system, sans-serif',
+    },
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      padding: '14px 18px',
+      borderBottom: `1px solid ${t.rule}`,
+      background: t.panel,
+    },
+    headerDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 8,
+      background: t.accent,
+      boxShadow: `0 0 0 4px ${t.accentRing}`,
+    },
+    headerTitle: { fontSize: 13, color: t.inkSoft, flex: 1 },
+    headerMeta: { display: 'flex', gap: 6 },
+    pill: {
+      fontSize: 10.5,
+      fontFamily: 'JetBrains Mono, monospace',
+      padding: '2px 8px',
+      borderRadius: 20,
+      background: t.cream,
+      color: t.muted,
+      letterSpacing: '0.02em',
+      border: `1px solid ${t.rule}`,
+    },
+    body: {
+      padding: '24px 22px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+      minHeight: 320,
+    },
+    msg: { maxWidth: '88%', lineHeight: 1.55 },
+    msgUser: {
+      alignSelf: 'flex-end',
+      background: t.solid,
+      color: t.solidText,
+      padding: '10px 14px',
+      borderRadius: '16px 16px 4px 16px',
+      fontSize: 14,
+    },
+    msgAi: {
+      alignSelf: 'flex-start',
+      fontSize: 14.5,
+      color: t.ink,
+    },
+    aiLabel: {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: 10,
+      letterSpacing: '0.18em',
+      color: t.accent,
+      marginBottom: 6,
+      fontWeight: 500,
+    },
+    msgText: {},
+    codeBlock: {
+      marginTop: 8,
+      padding: '10px 14px',
+      background: t.panel,
+      border: `1px solid ${t.rule}`,
+      borderRadius: 8,
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: 13,
+      color: t.inkSoft,
+    },
+    cites: {
+      marginTop: 10,
+      display: 'flex',
+      gap: 6,
+      flexWrap: 'wrap',
+    },
+    cite: {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: 11,
+      padding: '3px 8px',
+      borderRadius: 20,
+      background: t.cream,
+      color: t.muted,
+      border: `1px solid ${t.rule}`,
+    },
+    typing: {
+      alignSelf: 'flex-start',
+      color: t.accent,
+      fontSize: 22,
+      lineHeight: 1,
+      letterSpacing: 2,
+    },
+    dot1: { animation: 'blink 1.2s infinite', animationDelay: '0s' },
+    dot2: { animation: 'blink 1.2s infinite', animationDelay: '0.2s' },
+    dot3: { animation: 'blink 1.2s infinite', animationDelay: '0.4s' },
+  };
+}
+
+function getTerminalChatStyles(theme) {
+  const t = resolveChatTheme(theme);
+  const base = getEditorialChatStyles(t);
+  return {
+    ...base,
+    wrap: {
+      ...base.wrap,
+      background: t.terminalWrap,
+      border: `1px solid ${t.terminalBorder}`,
+      borderRadius: 4,
+      boxShadow: `0 40px 80px -30px rgba(0,0,0,0.2), 0 0 0 1px ${t.terminalBorder}`,
+    },
+    header: {
+      ...base.header,
+      background: t.panel,
+      borderBottom: `1px solid ${t.terminalBorder}`,
+      padding: '12px 16px',
+    },
+    headerDot: {
+      ...base.headerDot,
+      background: t.terminalAccent,
+    },
+    aiLabel: {
+      ...base.aiLabel,
+      color: t.terminalAccent,
+    },
+  };
+}
+
+function getChatStyles(variant, theme) {
+  return variant === 'editorial' ? getEditorialChatStyles(theme) : getTerminalChatStyles(theme);
+}
+
+function ChatDemo({ variant = 'editorial', theme }) {
   const [scriptIdx, setScriptIdx] = React.useState(0);
   const [shown, setShown] = React.useState(0);
   const [visible, setVisible] = React.useState(true); // body opacity for cross-fade
@@ -183,7 +376,7 @@ function ChatDemo({ variant = 'editorial' }) {
     return () => clearTimeout(t);
   }, [visible]);
 
-  const styles = variant === 'editorial' ? editorialChatStyles : terminalChatStyles;
+  const styles = getChatStyles(variant, theme);
 
   return (
     <div ref={ref} style={styles.wrap}>
@@ -222,7 +415,7 @@ function ChatDemo({ variant = 'editorial' }) {
         }}
       >
         {steps.slice(0, shown).map((msg, i) => (
-          <ChatMsg key={i} msg={msg} variant={variant} />
+          <ChatMsg key={i} msg={msg} variant={variant} theme={theme} />
         ))}
         {shown > 0 && shown < steps.length && (
           <div style={{ ...styles.msg, ...styles.typing }}>
@@ -236,8 +429,9 @@ function ChatDemo({ variant = 'editorial' }) {
   );
 }
 
-function ChatMsg({ msg, variant }) {
-  const styles = variant === 'editorial' ? editorialChatStyles : terminalChatStyles;
+function ChatMsg({ msg, variant, theme }) {
+  const styles = getChatStyles(variant, theme);
+  const t = resolveChatTheme(theme);
   const isUser = msg.from === 'user';
   return (
     <div
@@ -252,7 +446,7 @@ function ChatMsg({ msg, variant }) {
         {msg.text}
         {msg.code && (
           <div style={styles.codeBlock}>
-            <span style={{ color: variant === 'editorial' ? '#9a3412' : '#d97706' }}>»</span>{' '}
+            <span style={{ color: '#5962B8' }}>»</span>{' '}
             {msg.code}
           </div>
         )}
@@ -270,40 +464,40 @@ function ChatMsg({ msg, variant }) {
   );
 }
 
-// Editorial chat styles — cream, warm, softer
+// Editorial chat styles — modern, neutral, Apple/Glaze-inspired
 const editorialChatStyles = {
   wrap: {
-    background: '#fffdf8',
-    border: '1px solid #e7e2d6',
-    borderRadius: 14,
+    background: '#ffffff',
+    border: '1px solid #e4e4e7',
+    borderRadius: 16,
     overflow: 'hidden',
-    boxShadow: '0 30px 80px -30px rgba(60, 40, 20, 0.25), 0 10px 30px -15px rgba(60, 40, 20, 0.15)',
-    fontFamily: 'Geist, -apple-system, sans-serif',
+    boxShadow: '0 30px 80px -30px rgba(9,9,11,0.18), 0 10px 30px -15px rgba(9,9,11,0.1)',
+    fontFamily: 'Space Grotesk, -apple-system, sans-serif',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
     padding: '14px 18px',
-    borderBottom: '1px solid #efeadd',
-    background: '#faf7ef',
+    borderBottom: '1px solid #e4e4e7',
+    background: '#f8f8fa',
   },
   headerDot: {
     width: 8,
     height: 8,
     borderRadius: 8,
-    background: '#9a3412',
-    boxShadow: '0 0 0 4px rgba(154,52,18,0.12)',
+    background: '#5962B8',
+    boxShadow: '0 0 0 4px rgba(89,98,184,0.14)',
   },
-  headerTitle: { fontSize: 13, color: '#44403c', flex: 1 },
+  headerTitle: { fontSize: 13, color: '#1a1a1a', flex: 1 },
   headerMeta: { display: 'flex', gap: 6 },
   pill: {
     fontSize: 10.5,
     fontFamily: 'JetBrains Mono, monospace',
     padding: '2px 8px',
     borderRadius: 20,
-    background: '#f4efe2',
-    color: '#78716c',
+    background: '#f4f4f5',
+    color: '#71717a',
     letterSpacing: '0.02em',
   },
   body: {
@@ -316,8 +510,8 @@ const editorialChatStyles = {
   msg: { maxWidth: '88%', lineHeight: 1.55 },
   msgUser: {
     alignSelf: 'flex-end',
-    background: '#292524',
-    color: '#fafaf9',
+    background: '#09090b',
+    color: '#ffffff',
     padding: '10px 14px',
     borderRadius: '16px 16px 4px 16px',
     fontSize: 14,
@@ -325,26 +519,26 @@ const editorialChatStyles = {
   msgAi: {
     alignSelf: 'flex-start',
     fontSize: 14.5,
-    color: '#292524',
+    color: '#09090b',
   },
   aiLabel: {
     fontFamily: 'JetBrains Mono, monospace',
     fontSize: 10,
-    letterSpacing: '0.18em',
-    color: '#9a3412',
+    letterSpacing: '0.2em',
+    color: '#5962B8',
     marginBottom: 6,
-    fontWeight: 500,
+    fontWeight: 600,
   },
   msgText: {},
   codeBlock: {
     marginTop: 8,
     padding: '10px 14px',
-    background: '#faf7ef',
-    border: '1px solid #efeadd',
+    background: '#f4f4f5',
+    border: '1px solid #e4e4e7',
     borderRadius: 8,
     fontFamily: 'JetBrains Mono, monospace',
     fontSize: 13,
-    color: '#44403c',
+    color: '#27272a',
   },
   cites: {
     marginTop: 10,
@@ -357,13 +551,13 @@ const editorialChatStyles = {
     fontSize: 11,
     padding: '3px 8px',
     borderRadius: 20,
-    background: '#f4efe2',
-    color: '#78716c',
-    border: '1px solid #efeadd',
+    background: '#f4f4f5',
+    color: '#71717a',
+    border: '1px solid #e4e4e7',
   },
   typing: {
     alignSelf: 'flex-start',
-    color: '#9a3412',
+    color: '#5962B8',
     fontSize: 22,
     lineHeight: 1,
     letterSpacing: 2,
@@ -379,24 +573,24 @@ const terminalChatStyles = {
   wrap: {
     ...editorialChatStyles.wrap,
     background: '#ffffff',
-    border: '1px solid #e5e5e5',
-    borderRadius: 4,
-    boxShadow: '0 40px 80px -30px rgba(0,0,0,0.2), 0 0 0 1px #e5e5e5',
+    border: '1px solid #e4e4e7',
+    borderRadius: 6,
+    boxShadow: '0 40px 80px -30px rgba(0,0,0,0.15), 0 0 0 1px #e4e4e7',
   },
   header: {
     ...editorialChatStyles.header,
-    background: '#fafaf9',
-    borderBottom: '1px solid #e5e5e5',
+    background: '#fafafa',
+    borderBottom: '1px solid #e4e4e7',
     padding: '12px 16px',
   },
   headerDot: {
     ...editorialChatStyles.headerDot,
-    background: '#d97706',
-    boxShadow: '0 0 0 4px rgba(217,119,6,0.12)',
+    background: '#5962B8',
+    boxShadow: '0 0 0 4px rgba(89,98,184,0.14)',
   },
   aiLabel: {
     ...editorialChatStyles.aiLabel,
-    color: '#d97706',
+    color: '#5962B8',
   },
 };
 
@@ -492,4 +686,4 @@ function CursorGlow({ color = 'rgba(154, 52, 18, 0.08)', size = 500 }) {
   );
 }
 
-Object.assign(window, { BinaryStrip, ChatDemo, useInView, CursorGlow, ANALYSIS_SCRIPTS });
+Object.assign(window, { BinaryStrip, ChatDemo, useInView, CursorGlow, ANALYSIS_SCRIPTS, useResponsive });

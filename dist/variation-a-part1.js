@@ -1,42 +1,172 @@
-// Variation A — Editorial / Warm Cream
-// Serif headlines (Instrument Serif), Geist body, JetBrains Mono accents
-// Cream background, espresso ink, burnt orange accent
+// Variation A — Binder
+// Monochrome base (pure B&W CTAs, zinc scale) + muted blue-violet brand accent.
+// Typography: Space Grotesk for brand/UI, Space Mono for the lockup, JetBrains Mono for code.
 
-function VariationA() {
-  const theme = {
-    bg: '#f8f5ec',
-    paper: '#fffdf8',
-    ink: '#1f1b16',
-    inkSoft: '#44403c',
-    muted: '#78716c',
-    rule: '#e7e2d6',
-    accent: '#9a3412',
-    accentSoft: '#c2410c',
-    cream: '#f4efe2'
+function createBinderTheme(dark) {
+  if (dark) {
+    return {
+      mode: 'dark',
+      bg: '#09090b',
+      // zinc-950
+      paper: '#0f0f12',
+      panel: '#141418',
+      cream: '#1a1a1f',
+      ink: '#fafafa',
+      // zinc-50
+      inkSoft: '#d4d4d8',
+      // zinc-300
+      muted: '#a1a1aa',
+      // zinc-400
+      rule: '#27272a',
+      // zinc-800
+      accent: '#fafafa',
+      // white CTA on dark (mirrors black-on-light)
+      accentSoft: '#d4d4d8',
+      // zinc-300
+      success: '#22c55e',
+      solid: '#050507',
+      solidText: '#fafafa',
+      primaryBg: '#fafafa',
+      primaryText: '#09090b',
+      primaryHover: '#ffffff',
+      navGlass: 'rgba(9,9,11,0.72)',
+      navHover: 'rgba(250,250,250,0.06)',
+      navShadow: '0 1px 0 rgba(255,255,255,0.04), 0 20px 48px -24px rgba(0,0,0,0.9)',
+      elevatedShadow: '0 30px 80px -30px rgba(0,0,0,0.85), 0 10px 28px -16px rgba(0,0,0,0.6)',
+      cardHoverShadow: '0 24px 40px -24px rgba(0,0,0,0.8)',
+      logoFrom: '#27272a',
+      logoTo: '#09090b',
+      logoRing: 'rgba(250,250,250,0.1)',
+      logoInset: 'rgba(255,255,255,0.06)',
+      logoShadow: 'rgba(0,0,0,0.8)',
+      accentRing: 'rgba(250,250,250,0.08)',
+      terminalAccent: '#5962B8',
+      terminalWrap: '#0f0f12',
+      terminalBorder: '#27272a',
+      footerText: 'rgba(250,250,250,0.78)',
+      footerTextSoft: 'rgba(250,250,250,0.58)',
+      footerTextMuted: 'rgba(250,250,250,0.48)',
+      footerBorder: 'rgba(250,250,250,0.08)',
+      footerGhostBorder: 'rgba(250,250,250,0.24)',
+      footerGhostBorderHover: 'rgba(250,250,250,0.44)',
+      footerGhostBgHover: 'rgba(250,250,250,0.06)',
+      accentGlow: 'rgba(89,98,184,0.45)',
+      accentGlowZero: 'rgba(89,98,184,0)',
+      brand: '#5962B8',
+      brandRing: 'rgba(89,98,184,0.22)',
+      brandSoft: 'rgba(89,98,184,0.14)',
+      heroDotGrid: 'rgba(255,255,255,0.03)'
+    };
+  }
+  return {
+    mode: 'light',
+    bg: '#ffffff',
+    // glaze pure white
+    paper: '#ffffff',
+    panel: '#fafafa',
+    cream: '#f5f5f5',
+    ink: '#000000',
+    // pure black for max contrast
+    inkSoft: '#1a1a1a',
+    muted: '#717171',
+    // glaze signature gray
+    rule: '#e5e5e5',
+    accent: '#000000',
+    // monochrome — CTA is black
+    accentSoft: '#404040',
+    success: '#22c55e',
+    solid: '#000000',
+    solidText: '#ffffff',
+    primaryBg: '#000000',
+    primaryText: '#ffffff',
+    primaryHover: '#1a1a1a',
+    navGlass: 'rgba(255,255,255,0.8)',
+    navHover: 'rgba(0,0,0,0.04)',
+    navShadow: '0 1px 0 rgba(0,0,0,0.04), 0 8px 24px -16px rgba(0,0,0,0.08)',
+    elevatedShadow: '0 30px 80px -30px rgba(0,0,0,0.12), 0 10px 30px -15px rgba(0,0,0,0.06)',
+    cardHoverShadow: '0 20px 40px -20px rgba(0,0,0,0.1)',
+    logoFrom: '#1a1a1a',
+    logoTo: '#000000',
+    logoRing: 'rgba(0,0,0,0.9)',
+    logoInset: 'rgba(255,255,255,0.06)',
+    logoShadow: 'rgba(0,0,0,0.3)',
+    accentRing: 'rgba(0,0,0,0.08)',
+    terminalAccent: '#000000',
+    terminalWrap: '#ffffff',
+    terminalBorder: '#e5e5e5',
+    footerText: 'rgba(255,255,255,0.78)',
+    footerTextSoft: 'rgba(255,255,255,0.58)',
+    footerTextMuted: 'rgba(255,255,255,0.48)',
+    footerBorder: 'rgba(255,255,255,0.08)',
+    footerGhostBorder: 'rgba(255,255,255,0.28)',
+    footerGhostBorderHover: 'rgba(255,255,255,0.55)',
+    footerGhostBgHover: 'rgba(255,255,255,0.06)',
+    accentGlow: 'rgba(0,0,0,0.35)',
+    accentGlowZero: 'rgba(0,0,0,0)',
+    brand: '#5962B8',
+    brandRing: 'rgba(89,98,184,0.16)',
+    brandSoft: 'rgba(89,98,184,0.10)',
+    heroDotGrid: 'rgba(18,18,18,0.04)'
   };
-  const serif = "'Instrument Serif', 'Cormorant Garamond', Georgia, serif";
-  const sans = "'Geist', -apple-system, BlinkMacSystemFont, sans-serif";
+}
+function scrollToId(id) {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById(id)?.scrollIntoView({
+    behavior: reduce ? 'auto' : 'smooth',
+    block: 'start'
+  });
+}
+function VariationA() {
+  const [dark, setDark] = React.useState(() => {
+    if (typeof window === 'undefined') return false;
+    if (window.__BINDER_TWEAKS__ && typeof window.__BINDER_TWEAKS__.dark === 'boolean') {
+      return window.__BINDER_TWEAKS__.dark;
+    }
+    try {
+      const stored = localStorage.getItem('binder-theme');
+      if (stored) return stored === 'dark';
+    } catch (err) {}
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+  const theme = React.useMemo(() => createBinderTheme(dark), [dark]);
+
+  // `serif` is kept for legacy call sites, but it now points to the display sans.
+  const serif = "'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif";
+  const sans = "'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif";
   const mono = "'JetBrains Mono', 'SF Mono', monospace";
+  const brandMono = "'Space Mono', 'JetBrains Mono', monospace";
+  React.useEffect(() => {
+    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+    document.body.style.background = theme.bg;
+    if (window.__BINDER_TWEAKS__) window.__BINDER_TWEAKS__.dark = dark;
+    try {
+      localStorage.setItem('binder-theme', dark ? 'dark' : 'light');
+    } catch (err) {}
+  }, [dark, theme.bg]);
   return /*#__PURE__*/React.createElement("div", {
     style: {
       background: theme.bg,
       color: theme.ink,
       fontFamily: sans,
       minHeight: '100%',
-      position: 'relative'
+      position: 'relative',
+      transition: 'background .25s ease, color .25s ease'
     }
   }, /*#__PURE__*/React.createElement(ScrollProgress, {
-    color: theme.accent
+    color: theme.brand
   }), /*#__PURE__*/React.createElement(SectionBeacon, {
     ids: ['hero', 'story', 'problem', 'features', 'workflow', 'usecases', 'security', 'faq'],
     labels: ['Intro', 'Story', 'Problem', 'Features', 'Workflow', 'Use cases', 'Security', 'FAQ'],
-    accent: theme.accent,
+    accent: theme.brand,
     ink: theme.ink
   }), /*#__PURE__*/React.createElement(VANav, {
     theme: theme,
     serif: serif,
     sans: sans,
-    mono: mono
+    mono: mono,
+    brandMono: brandMono,
+    isDark: dark,
+    onToggleDark: () => setDark(value => !value)
   }), /*#__PURE__*/React.createElement("section", {
     id: "hero"
   }, /*#__PURE__*/React.createElement(VAHero, {
@@ -92,7 +222,8 @@ function VariationA() {
   })), /*#__PURE__*/React.createElement(VAFooter, {
     theme: theme,
     serif: serif,
-    mono: mono
+    mono: mono,
+    brandMono: brandMono
   }));
 }
 
@@ -101,31 +232,48 @@ function VANav({
   theme,
   serif,
   sans,
-  mono
+  mono,
+  brandMono,
+  isDark,
+  onToggleDark
 }) {
+  const {
+    isMobile,
+    isTablet
+  } = useResponsive();
   const [scrolled, setScrolled] = React.useState(false);
   const [hoverIdx, setHoverIdx] = React.useState(-1);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
     window.addEventListener('scroll', onScroll, {
       passive: true
     });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+  React.useEffect(() => {
+    if (!isTablet) setMobileOpen(false);
+  }, [isTablet]);
   const links = [{
     label: 'Product',
+    href: '#features',
     menu: true
   }, {
     label: 'Workflows',
+    href: '#workflow',
     menu: false
   }, {
     label: 'Models',
+    href: '#features',
     menu: false
   }, {
     label: 'Research',
+    href: '#story',
     menu: true
   }, {
     label: 'Pricing',
+    href: '#faq',
     menu: false
   }];
   return /*#__PURE__*/React.createElement("div", {
@@ -133,45 +281,49 @@ function VANav({
       position: 'sticky',
       top: 0,
       zIndex: 50,
-      background: scrolled ? 'rgba(248, 245, 236, 0.78)' : 'transparent',
-      backdropFilter: scrolled ? 'blur(14px) saturate(1.3)' : 'none',
-      WebkitBackdropFilter: scrolled ? 'blur(14px) saturate(1.3)' : 'none',
-      borderBottom: `1px solid ${scrolled ? theme.rule : 'transparent'}`,
-      boxShadow: scrolled ? '0 1px 0 rgba(31,27,22,0.03), 0 8px 24px -16px rgba(31,27,22,0.12)' : 'none',
+      background: scrolled || mobileOpen ? theme.navGlass : 'transparent',
+      backdropFilter: scrolled || mobileOpen ? 'blur(14px) saturate(1.3)' : 'none',
+      WebkitBackdropFilter: scrolled || mobileOpen ? 'blur(14px) saturate(1.3)' : 'none',
+      borderBottom: `1px solid ${scrolled || mobileOpen ? theme.rule : 'transparent'}`,
+      boxShadow: scrolled ? theme.navShadow : 'none',
       transition: 'background .25s ease, border-color .25s ease, box-shadow .25s ease'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 1280,
       margin: '0 auto',
-      padding: '14px 40px',
+      padding: isMobile ? '12px 18px' : isTablet ? '13px 28px' : '14px 40px',
       display: 'flex',
       alignItems: 'center',
-      gap: 36
+      gap: isTablet ? 16 : 36
     }
   }, /*#__PURE__*/React.createElement("a", {
-    href: "#",
+    href: "#hero",
     style: {
       display: 'flex',
       alignItems: 'center',
       gap: 12,
       textDecoration: 'none',
-      color: theme.ink
+      color: theme.ink,
+      minWidth: 0
     }
   }, /*#__PURE__*/React.createElement(BinderMark, {
-    theme: theme
+    theme: theme,
+    size: isMobile ? 30 : 32
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      lineHeight: 1
+      lineHeight: 1,
+      minWidth: 0
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontFamily: serif,
-      fontSize: 22,
-      letterSpacing: 0,
-      fontWeight: 400
+      fontFamily: brandMono || mono,
+      fontSize: isMobile ? 14 : 15,
+      letterSpacing: '0.16em',
+      fontWeight: 700,
+      textTransform: 'uppercase'
     }
   }, "Binder"), /*#__PURE__*/React.createElement("span", {
     style: {
@@ -181,16 +333,17 @@ function VANav({
       color: theme.inkSoft,
       marginTop: 3,
       textTransform: 'uppercase',
-      opacity: 0.72
+      opacity: 0.72,
+      whiteSpace: 'nowrap'
     }
-  }, "AI\xA0\xB7\xA0Reverse\xA0Engineering"))), /*#__PURE__*/React.createElement("div", {
+  }, "AI\xA0\xB7\xA0Reverse\xA0Engineering"))), !isTablet && /*#__PURE__*/React.createElement("div", {
     style: {
       width: 1,
       height: 22,
       background: theme.rule,
       opacity: 0.7
     }
-  }), /*#__PURE__*/React.createElement("nav", {
+  }), !isTablet && /*#__PURE__*/React.createElement("nav", {
     style: {
       display: 'flex',
       gap: 4,
@@ -202,7 +355,7 @@ function VANav({
     }
   }, links.map((l, i) => /*#__PURE__*/React.createElement("a", {
     key: l.label,
-    href: "#",
+    href: l.href,
     onMouseEnter: () => setHoverIdx(i),
     onMouseLeave: () => setHoverIdx(-1),
     style: {
@@ -210,7 +363,7 @@ function VANav({
       padding: '8px 14px',
       borderRadius: 7,
       color: hoverIdx === i ? theme.ink : theme.inkSoft,
-      background: hoverIdx === i ? 'rgba(31,27,22,0.04)' : 'transparent',
+      background: hoverIdx === i ? theme.navHover : 'transparent',
       textDecoration: 'none',
       display: 'inline-flex',
       alignItems: 'center',
@@ -237,23 +390,133 @@ function VANav({
     style: {
       display: 'flex',
       alignItems: 'center',
-      gap: 18
+      gap: 12,
+      marginLeft: 'auto'
     }
-  }, /*#__PURE__*/React.createElement("a", {
-    href: "#",
+  }, /*#__PURE__*/React.createElement(ThemeToggleButton, {
+    theme: theme,
+    isDark: isDark,
+    onToggle: onToggleDark
+  }), !isTablet && /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: sans,
-      fontSize: 13.5,
-      fontWeight: 500,
-      color: theme.inkSoft,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      padding: 4,
+      borderRadius: 999,
+      border: `1px solid ${theme.rule}`,
+      background: theme.paper,
+      boxShadow: scrolled ? '0 10px 28px -22px rgba(15, 12, 9, 0.28)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement(VAButton, {
+    theme: theme,
+    variant: "ghost",
+    onClick: () => scrollToId('footer-cta'),
+    style: {
+      border: 'none',
+      background: 'transparent',
+      padding: '11px 16px',
+      minHeight: 42,
+      color: theme.inkSoft
+    }
+  }, "Start free trial"), /*#__PURE__*/React.createElement(VAButton, {
+    theme: theme,
+    onClick: () => scrollToId('footer-cta'),
+    style: {
+      padding: '11px 18px',
+      minHeight: 42
+    }
+  }, "Request a demo")), isTablet && /*#__PURE__*/React.createElement(IconButton, {
+    theme: theme,
+    title: mobileOpen ? 'Close menu' : 'Open menu',
+    onClick: () => setMobileOpen(value => !value)
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18",
+    fill: "none"
+  }, mobileOpen ? /*#__PURE__*/React.createElement("path", {
+    d: "M4 4l10 10M14 4L4 14",
+    stroke: "currentColor",
+    strokeWidth: "1.6",
+    strokeLinecap: "round"
+  }) : /*#__PURE__*/React.createElement("path", {
+    d: "M3.5 5h11M3.5 9h11M3.5 13h11",
+    stroke: "currentColor",
+    strokeWidth: "1.6",
+    strokeLinecap: "round"
+  }))))), isTablet && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxHeight: mobileOpen ? 360 : 0,
+      opacity: mobileOpen ? 1 : 0,
+      overflow: 'hidden',
+      transition: 'max-height .28s ease, opacity .2s ease',
+      borderTop: mobileOpen ? `1px solid ${theme.rule}` : '1px solid transparent'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1280,
+      margin: '0 auto',
+      padding: isMobile ? '12px 18px 22px' : '16px 28px 24px'
+    }
+  }, /*#__PURE__*/React.createElement("nav", {
+    style: {
+      display: 'grid',
+      gap: 6
+    }
+  }, links.map(link => /*#__PURE__*/React.createElement("a", {
+    key: link.label,
+    href: link.href,
+    onClick: () => setMobileOpen(false),
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '14px 0',
+      color: theme.ink,
       textDecoration: 'none',
-      transition: 'color .15s ease'
+      borderBottom: `1px solid ${theme.rule}`,
+      fontFamily: sans,
+      fontSize: isMobile ? 17 : 18,
+      fontWeight: 500
+    }
+  }, link.label, link.menu && /*#__PURE__*/React.createElement("svg", {
+    width: "9",
+    height: "9",
+    viewBox: "0 0 10 10",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M2 4l3 3 3-3",
+    stroke: "currentColor",
+    strokeWidth: "1.4",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 12,
+      marginTop: 18,
+      flexDirection: isMobile ? 'column' : 'row'
+    }
+  }, /*#__PURE__*/React.createElement(VAButton, {
+    theme: theme,
+    onClick: () => {
+      setMobileOpen(false);
+      scrollToId('footer-cta');
     },
-    onMouseEnter: e => e.currentTarget.style.color = theme.ink,
-    onMouseLeave: e => e.currentTarget.style.color = theme.inkSoft
-  }, "Sign in"), /*#__PURE__*/React.createElement(VAButton, {
-    theme: theme
-  }, "Request a demo"))));
+    style: isMobile ? {
+      width: '100%',
+      justifyContent: 'center'
+    } : undefined
+  }, "Request a demo"), /*#__PURE__*/React.createElement(VAButton, {
+    theme: theme,
+    variant: "ghost",
+    onClick: () => setMobileOpen(false),
+    style: isMobile ? {
+      width: '100%',
+      justifyContent: 'center'
+    } : undefined
+  }, "Start free trial")))));
 }
 function BinderMark({
   theme,
@@ -264,13 +527,13 @@ function BinderMark({
       width: size,
       height: size,
       borderRadius: 8,
-      background: `linear-gradient(145deg, #2a241d 0%, ${theme.ink} 55%, #0f0c09 100%)`,
+      background: `linear-gradient(145deg, ${theme.logoFrom} 0%, ${theme.solid} 55%, ${theme.logoTo} 100%)`,
       position: 'relative',
       flexShrink: 0,
       boxShadow: `
-        0 0 0 1px rgba(31,27,22,0.85),
-        0 1px 0 rgba(255,255,255,0.08) inset,
-        0 6px 14px -6px rgba(31,27,22,0.45)
+        0 0 0 1px ${theme.logoRing},
+        0 1px 0 ${theme.logoInset} inset,
+        0 6px 14px -6px ${theme.logoShadow}
       `
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -279,12 +542,12 @@ function BinderMark({
       inset: 0,
       display: 'grid',
       placeItems: 'center',
-      fontFamily: 'Instrument Serif, serif',
-      fontStyle: 'italic',
-      fontSize: size * 0.62,
-      color: theme.paper,
+      fontFamily: "'Space Mono', 'JetBrains Mono', monospace",
+      fontSize: size * 0.5,
+      fontWeight: 700,
+      color: theme.solidText,
       lineHeight: 1,
-      letterSpacing: '-0.02em',
+      letterSpacing: '-0.05em',
       paddingBottom: size * 0.04
     }
   }, "b"), /*#__PURE__*/React.createElement("div", {
@@ -294,9 +557,8 @@ function BinderMark({
       right: size * 0.22,
       bottom: size * 0.18,
       height: 1.5,
-      background: theme.accent,
-      borderRadius: 1,
-      opacity: 0.92
+      background: theme.brand,
+      borderRadius: 1
     }
   }));
 }
@@ -310,6 +572,7 @@ function VAButton({
   const base = {
     display: 'inline-flex',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 8,
     padding: '10px 18px',
     borderRadius: 999,
@@ -323,18 +586,19 @@ function VAButton({
   };
   if (variant === 'primary') {
     return /*#__PURE__*/React.createElement("button", {
+      type: "button",
       onClick: onClick,
       style: {
         ...base,
-        background: theme.ink,
-        color: theme.paper
+        background: theme.primaryBg,
+        color: theme.primaryText
       },
       onMouseEnter: e => {
-        e.currentTarget.style.background = theme.accent;
+        e.currentTarget.style.background = theme.primaryHover;
         e.currentTarget.style.transform = 'translateY(-1px)';
       },
       onMouseLeave: e => {
-        e.currentTarget.style.background = theme.ink;
+        e.currentTarget.style.background = theme.primaryBg;
         e.currentTarget.style.transform = 'translateY(0)';
       }
     }, children, /*#__PURE__*/React.createElement("svg", {
@@ -351,6 +615,7 @@ function VAButton({
     })));
   }
   return /*#__PURE__*/React.createElement("button", {
+    type: "button",
     onClick: onClick,
     style: {
       ...base,
@@ -362,6 +627,77 @@ function VAButton({
     onMouseLeave: e => e.currentTarget.style.background = 'transparent'
   }, children);
 }
+function IconButton({
+  theme,
+  title,
+  onClick,
+  children
+}) {
+  return /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    title: title,
+    "aria-label": title,
+    onClick: onClick,
+    style: {
+      width: 42,
+      height: 42,
+      borderRadius: 999,
+      border: `1px solid ${theme.rule}`,
+      background: 'transparent',
+      color: theme.ink,
+      display: 'grid',
+      placeItems: 'center',
+      cursor: 'pointer',
+      transition: 'background .15s ease, transform .15s ease, border-color .15s ease'
+    },
+    onMouseEnter: e => {
+      e.currentTarget.style.background = theme.cream;
+      e.currentTarget.style.transform = 'translateY(-1px)';
+    },
+    onMouseLeave: e => {
+      e.currentTarget.style.background = 'transparent';
+      e.currentTarget.style.transform = 'translateY(0)';
+    }
+  }, children);
+}
+function ThemeToggleButton({
+  theme,
+  isDark,
+  onToggle
+}) {
+  return /*#__PURE__*/React.createElement(IconButton, {
+    theme: theme,
+    title: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+    onClick: onToggle
+  }, isDark ? /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "9",
+    r: "3.4",
+    stroke: "currentColor",
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 1.75v2.1M9 14.15v2.1M16.25 9h-2.1M3.85 9h-2.1M14.13 3.87l-1.49 1.49M5.36 12.64l-1.49 1.49M14.13 14.13l-1.49-1.49M5.36 5.36L3.87 3.87",
+    stroke: "currentColor",
+    strokeWidth: "1.4",
+    strokeLinecap: "round"
+  })) : /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M14.3 10.92A6.15 6.15 0 0 1 7.08 3.7 6.4 6.4 0 1 0 14.3 10.92Z",
+    stroke: "currentColor",
+    strokeWidth: "1.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  })));
+}
 
 // ───────────────────── HERO ─────────────────────
 function VAHero({
@@ -370,16 +706,20 @@ function VAHero({
   sans,
   mono
 }) {
+  const {
+    isMobile,
+    isTablet
+  } = useResponsive();
   return /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'relative',
       overflow: 'hidden',
-      minHeight: 720
+      minHeight: isTablet ? 'auto' : 720
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
-      top: 120,
+      top: isMobile ? 170 : 120,
       left: 0,
       right: 0,
       pointerEvents: 'none',
@@ -394,7 +734,7 @@ function VAHero({
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
-      bottom: 120,
+      bottom: isMobile ? 40 : 120,
       left: 0,
       right: 0,
       pointerEvents: 'none',
@@ -410,15 +750,15 @@ function VAHero({
     style: {
       maxWidth: 1280,
       margin: '0 auto',
-      padding: '88px 48px 72px',
+      padding: isMobile ? '56px 24px 56px' : isTablet ? '72px 32px 64px' : '88px 48px 72px',
       position: 'relative',
       zIndex: 2
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '1.05fr 1fr',
-      gap: 72,
+      gridTemplateColumns: isTablet ? '1fr' : '1.05fr 1fr',
+      gap: isMobile ? 44 : isTablet ? 56 : 72,
       alignItems: 'center'
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Reveal, {
@@ -441,11 +781,12 @@ function VAHero({
     style: {
       fontFamily: mono,
       fontSize: 10,
-      letterSpacing: '0.14em',
-      padding: '3px 8px',
+      fontWeight: 600,
+      letterSpacing: '0.16em',
+      padding: '3px 9px',
       borderRadius: 999,
-      background: theme.accent,
-      color: theme.paper
+      background: theme.brand,
+      color: '#ffffff'
     }
   }, "NEW"), "Multi-sample clustering is live", /*#__PURE__*/React.createElement("svg", {
     width: "10",
@@ -466,52 +807,28 @@ function VAHero({
     duration: 900
   }, /*#__PURE__*/React.createElement("h1", {
     style: {
-      fontFamily: serif,
-      fontSize: 'clamp(56px, 6.2vw, 92px)',
-      lineHeight: 0.98,
-      letterSpacing: '-0.025em',
-      fontWeight: 400,
+      fontFamily: sans,
+      fontSize: isMobile ? 'clamp(48px, 13vw, 64px)' : isTablet ? 'clamp(60px, 9vw, 80px)' : 'clamp(52px, 5.8vw, 84px)',
+      lineHeight: 1.02,
+      letterSpacing: '-0.035em',
+      fontWeight: 600,
       margin: 0,
       color: theme.ink
     }
-  }, "From bytes", /*#__PURE__*/React.createElement("br", null), "to", ' ', /*#__PURE__*/React.createElement("span", {
+  }, "From bytes", /*#__PURE__*/React.createElement("br", null), "to ", /*#__PURE__*/React.createElement("span", {
     style: {
-      position: 'relative',
-      display: 'inline-block'
+      color: theme.brand
     }
-  }, /*#__PURE__*/React.createElement("em", {
-    style: {
-      color: theme.accent,
-      fontStyle: 'italic'
-    }
-  }, "clarity,"), /*#__PURE__*/React.createElement("svg", {
-    style: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: -8,
-      width: '100%'
-    },
-    height: "14",
-    viewBox: "0 0 200 14",
-    preserveAspectRatio: "none"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M2 8 Q 50 2, 100 7 T 198 6",
-    stroke: theme.accent,
-    strokeWidth: "1.5",
-    fill: "none",
-    opacity: "0.5",
-    strokeLinecap: "round"
-  }))), /*#__PURE__*/React.createElement("br", null), "in minutes.")), /*#__PURE__*/React.createElement(Reveal, {
+  }, "clarity"), ",", /*#__PURE__*/React.createElement("br", null), "in minutes.")), /*#__PURE__*/React.createElement(Reveal, {
     delay: 260,
     y: 20
   }, /*#__PURE__*/React.createElement("p", {
     style: {
-      fontSize: 19,
+      fontSize: isMobile ? 18 : 19,
       lineHeight: 1.55,
       color: theme.inkSoft,
       marginTop: 32,
-      maxWidth: 520,
+      maxWidth: isTablet ? 620 : 520,
       textWrap: 'pretty'
     }
   }, "Binder is the AI analyst for reverse engineers \u2014 and anyone trying to understand what a binary actually does. Upload an", ' ', /*#__PURE__*/React.createElement("code", {
@@ -540,21 +857,33 @@ function VAHero({
       display: 'flex',
       gap: 12,
       marginTop: 40,
-      alignItems: 'center'
+      alignItems: 'center',
+      flexDirection: isMobile ? 'column' : 'row',
+      flexWrap: 'wrap',
+      width: isMobile ? '100%' : 'auto'
     }
   }, /*#__PURE__*/React.createElement(VAButton, {
-    theme: theme
+    theme: theme,
+    onClick: () => scrollToId('footer-cta'),
+    style: isMobile ? {
+      width: '100%'
+    } : undefined
   }, "Request a demo"), /*#__PURE__*/React.createElement(VAButton, {
     theme: theme,
-    variant: "ghost"
+    variant: "ghost",
+    onClick: () => scrollToId('story'),
+    style: isMobile ? {
+      width: '100%'
+    } : undefined
   }, "Watch a 90-sec walkthrough"))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 520,
     y: 16
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 56,
-      display: 'flex',
-      gap: 36,
+      marginTop: isMobile ? 42 : 56,
+      display: 'grid',
+      gridTemplateColumns: isMobile ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))',
+      gap: isMobile ? 18 : 36,
       fontSize: 12.5,
       color: theme.muted
     }
@@ -577,26 +906,30 @@ function VAHero({
   })), /*#__PURE__*/React.createElement(Stat, {
     mono: mono,
     theme: theme,
-    label: "Type II, in progress"
-  }, /*#__PURE__*/React.createElement("span", null, "SOC\xA02"))))), /*#__PURE__*/React.createElement(Reveal, {
+    label: "Built for sensitive samples"
+  }, /*#__PURE__*/React.createElement("span", null, "Privacy controls"))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 350,
     y: 30,
     duration: 900,
     style: {
-      position: 'relative'
+      position: 'relative',
+      width: '100%',
+      maxWidth: isTablet ? 720 : 'none',
+      justifySelf: isTablet ? 'stretch' : 'auto'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
-      top: -24,
-      left: -24,
+      top: isMobile ? -18 : -24,
+      left: isMobile ? 0 : -24,
       fontFamily: mono,
       fontSize: 10.5,
       letterSpacing: '0.16em',
       color: theme.muted
     }
   }, "01 \u2014 LIVE ANALYSIS"), /*#__PURE__*/React.createElement(ChatDemo, {
-    variant: "editorial"
+    variant: "editorial",
+    theme: theme
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
@@ -608,7 +941,8 @@ function VAHero({
       color: theme.accent,
       opacity: 0.08,
       fontStyle: 'italic',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      display: isMobile ? 'none' : 'block'
     }
   }, "\u201D")))));
 }
@@ -622,15 +956,20 @@ function Stat({
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: mono,
-      fontSize: 22,
+      fontSize: 26,
       color: theme.ink,
-      fontWeight: 500
+      fontWeight: 600,
+      letterSpacing: '-0.02em',
+      lineHeight: 1
     }
   }, children ?? num), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 4,
+      marginTop: 8,
+      fontSize: 13,
+      color: theme.muted,
+      lineHeight: 1.4,
       textWrap: 'pretty',
-      maxWidth: 140
+      maxWidth: 150
     }
   }, label));
 }
@@ -640,12 +979,15 @@ function VAMarquee({
   theme,
   mono
 }) {
+  const {
+    isMobile
+  } = useResponsive();
   const items = ['UNIT 42', 'MANDIANT', 'CISA', 'RECORDED FUTURE', 'CROWDSTRIKE', 'DRAGOS', 'GOOGLE TAG', 'FLARE'];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       borderTop: `1px solid ${theme.rule}`,
       borderBottom: `1px solid ${theme.rule}`,
-      padding: '28px 0',
+      padding: isMobile ? '22px 0' : '28px 0',
       overflow: 'hidden',
       background: theme.paper
     }
@@ -653,10 +995,11 @@ function VAMarquee({
     style: {
       maxWidth: 1280,
       margin: '0 auto',
-      padding: '0 48px',
+      padding: isMobile ? '0 24px' : '0 48px',
       display: 'flex',
       alignItems: 'center',
-      gap: 40
+      gap: isMobile ? 18 : 40,
+      flexDirection: isMobile ? 'column' : 'row'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -664,7 +1007,8 @@ function VAMarquee({
       fontSize: 10.5,
       letterSpacing: '0.18em',
       color: theme.muted,
-      flexShrink: 0
+      flexShrink: 0,
+      alignSelf: isMobile ? 'flex-start' : 'auto'
     }
   }, "TRUSTED BY TEAMS AT"), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -698,9 +1042,13 @@ function VAProblem({
   serif,
   mono
 }) {
+  const {
+    isMobile,
+    isTablet
+  } = useResponsive();
   return /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: '140px 48px'
+      padding: isMobile ? '92px 24px' : isTablet ? '116px 32px' : '140px 48px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -715,9 +1063,10 @@ function VAProblem({
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '1.2fr 1fr',
-      gap: 80,
-      marginTop: 24
+      gridTemplateColumns: isTablet ? '1fr' : 'minmax(0, 0.95fr) minmax(360px, 0.9fr)',
+      gap: isTablet ? 30 : 72,
+      marginTop: 24,
+      alignItems: 'start'
     }
   }, /*#__PURE__*/React.createElement(Reveal, {
     y: 28,
@@ -725,27 +1074,33 @@ function VAProblem({
   }, /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: serif,
-      fontSize: 'clamp(42px, 4.4vw, 64px)',
-      lineHeight: 1.05,
-      letterSpacing: '-0.02em',
-      fontWeight: 400,
+      fontSize: isMobile ? 'clamp(40px, 11vw, 54px)' : isTablet ? 'clamp(44px, 7vw, 62px)' : 'clamp(46px, 4vw, 58px)',
+      lineHeight: 1.08,
+      letterSpacing: '-0.015em',
+      fontWeight: 600,
       margin: 0,
-      color: theme.ink
+      color: theme.ink,
+      maxWidth: isTablet ? 760 : 620
     }
-  }, "Reverse engineering is slow, lonely, and", ' ', /*#__PURE__*/React.createElement("em", {
+  }, "Reverse engineering is slow, lonely, and", /*#__PURE__*/React.createElement("span", {
     style: {
-      color: theme.accent,
-      fontStyle: 'italic'
+      color: theme.brand,
+      display: 'inline-block',
+      margin: '0 0.14em',
+      textShadow: `0 0 26px ${theme.brandSoft}`
     }
-  }, "mentally expensive."), ' ', "We built Binder so it isn't.")), /*#__PURE__*/React.createElement(Reveal, {
+  }, "mentally expensive."), "We built Binder so it isn't.")), /*#__PURE__*/React.createElement(Reveal, {
     delay: 150,
     y: 20
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 17,
-      lineHeight: 1.65,
+      fontSize: isMobile ? 16 : 17,
+      lineHeight: 1.72,
       color: theme.inkSoft,
-      paddingTop: 12
+      paddingTop: isTablet ? 0 : 8,
+      maxWidth: 540,
+      borderLeft: !isMobile ? `1px solid ${theme.rule}` : 'none',
+      paddingLeft: !isMobile ? 28 : 0
     }
   }, /*#__PURE__*/React.createElement("p", {
     style: {
@@ -754,108 +1109,268 @@ function VAProblem({
     }
   }, "An analyst can spend hours just getting oriented in a binary before real work begins. Stripped symbols, opaque call graphs, encoded strings, packed code \u2014 the ceremony of reversing is what burns the day."), /*#__PURE__*/React.createElement("p", {
     style: {
-      marginTop: 18,
+      marginTop: 20,
       marginBottom: 0,
       textWrap: 'pretty'
     }
-  }, "Binder reads the binary alongside you. It names functions, explains behavior, surfaces suspicious logic, and grounds every answer in the exact addresses and bytes that support it \u2014 so you stay in the driver's seat.")))), /*#__PURE__*/React.createElement(Reveal, {
+  }, "Binder reads the binary alongside you. It names functions, explains behavior, surfaces suspicious logic, and grounds every answer in the exact addresses and bytes that support it \u2014 so you stay in the driver's seat."), /*#__PURE__*/React.createElement("p", {
+    style: {
+      marginTop: 20,
+      marginBottom: 0,
+      textWrap: 'pretty'
+    }
+  }, "The goal is not to hide the complexity. It is to keep the investigation moving: every rename, hypothesis, and answer stays tied to the evidence underneath it.")))), /*#__PURE__*/React.createElement(Reveal, {
     y: 40,
     duration: 900
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 80,
+      marginTop: isMobile ? 56 : 80,
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr',
       background: theme.paper,
       border: `1px solid ${theme.rule}`,
-      borderRadius: 14,
+      borderRadius: 16,
       overflow: 'hidden'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: '40px 40px',
-      borderRight: `1px solid ${theme.rule}`
+      padding: isMobile ? '28px 24px' : '40px 40px',
+      borderRight: isTablet ? 'none' : `1px solid ${theme.rule}`,
+      borderBottom: isTablet ? `1px solid ${theme.rule}` : 'none',
+      borderTop: `2px solid ${theme.rule}`
     }
   }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 6,
+      height: 6,
+      borderRadius: '50%',
+      background: theme.muted,
+      display: 'inline-block'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: mono,
       fontSize: 10.5,
-      letterSpacing: '0.16em',
+      letterSpacing: '0.2em',
       color: theme.muted,
-      marginBottom: 16
+      fontWeight: 600
     }
-  }, "BEFORE"), /*#__PURE__*/React.createElement("div", {
+  }, "BEFORE")), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: mono,
-      fontSize: 12,
-      color: theme.muted,
-      lineHeight: 1.7
+      fontSize: isMobile ? 11 : 12.5,
+      lineHeight: 1.75,
+      overflowX: 'auto'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      color: theme.inkSoft
+      color: theme.inkSoft,
+      fontWeight: 600,
+      marginBottom: 2
     }
-  }, "sub_401ab0()"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0push rbp"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0mov rbp, rsp"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0sub rsp, 0x40"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0mov rdi, [rbp-0x20]"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0call sub_4012a0"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0test eax, eax"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0jz short loc_401b40"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0...")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
     style: {
-      marginTop: 28,
+      color: theme.muted
+    }
+  }, "sub_401ab0"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "()")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0push"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
+    }
+  }, "rbp")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0mov"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
+    }
+  }, "rbp, rsp")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0sub"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
+    }
+  }, "rsp, "), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#71717a' : '#737373'
+    }
+  }, "0x40")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0mov"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
+    }
+  }, "rdi, [rbp-"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#71717a' : '#737373'
+    }
+  }, "0x20"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
+    }
+  }, "]")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0call"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#52525b' : '#a3a3a3'
+    }
+  }, "sub_4012a0")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0test"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
+    }
+  }, "eax, eax")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted
+    }
+  }, "\xA0\xA0jz short"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.mode === 'dark' ? '#52525b' : '#a3a3a3'
+    }
+  }, "loc_401b40")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: theme.mode === 'dark' ? '#3f3f46' : '#d4d4d4'
+    }
+  }, "\xA0\xA0...")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 32,
       fontFamily: serif,
       fontStyle: 'italic',
-      fontSize: 20,
+      fontSize: isMobile ? 17 : 19,
       color: theme.muted,
-      lineHeight: 1.4
+      lineHeight: 1.45,
+      paddingTop: 24,
+      borderTop: `1px solid ${theme.rule}`,
+      textWrap: 'pretty'
     }
   }, "\"What is this function even doing?\"")), /*#__PURE__*/React.createElement("div", {
     style: {
-      padding: '40px 40px',
-      background: '#fbf8f0'
+      padding: isMobile ? '28px 24px' : '40px 40px',
+      background: theme.mode === 'dark' ? theme.panel : '#fafafa',
+      borderTop: `2px solid ${theme.brand}`
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 6,
+      height: 6,
+      borderRadius: '50%',
+      background: theme.brand,
+      display: 'inline-block'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
       fontFamily: mono,
       fontSize: 10.5,
-      letterSpacing: '0.16em',
-      color: theme.accent,
-      marginBottom: 16
+      letterSpacing: '0.2em',
+      color: theme.brand,
+      fontWeight: 600
     }
-  }, "AFTER \xB7 BINDER"), /*#__PURE__*/React.createElement("div", {
+  }, "AFTER \xB7 BINDER")), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: mono,
-      fontSize: 12,
-      color: theme.inkSoft,
-      lineHeight: 1.7
+      fontSize: isMobile ? 11 : 12.5,
+      lineHeight: 1.75,
+      overflowX: 'auto'
     }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      color: theme.accent
+      fontWeight: 700,
+      marginBottom: 2
     }
-  }, "decrypt_and_execute"), "(buf, key)"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0", /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.brand
+    }
+  }, "decrypt_and_execute"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.inkSoft
+    }
+  }, "(buf, key)")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted,
+      fontStyle: 'italic'
+    }
+  }, "\xA0\xA0", '// xor-decrypts buf with 32-byte key @ 0x4010')), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.muted,
+      fontStyle: 'italic'
+    }
+  }, "\xA0\xA0", '// then jumps to the decrypted buffer')), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     style: {
       color: theme.muted
     }
-  }, "// xor-decrypts buf with 32-byte key @ 0x4010")), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0", /*#__PURE__*/React.createElement("span", {
+  }, "\xA0\xA0call"), " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: theme.brand
+    }
+  }, "xor_buffer")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     style: {
       color: theme.muted
     }
-  }, "// then jumps to the decrypted buffer")), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0call ", /*#__PURE__*/React.createElement("span", {
+  }, "\xA0\xA0test"), " ", /*#__PURE__*/React.createElement("span", {
     style: {
-      color: theme.accent
+      color: theme.mode === 'dark' ? '#a1a1aa' : '#525252'
     }
-  }, "xor_buffer")), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0test eax, eax"), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0jz short ", /*#__PURE__*/React.createElement("span", {
+  }, "eax, eax")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     style: {
-      color: theme.accent
+      color: theme.muted
     }
-  }, "integrity_fail")), /*#__PURE__*/React.createElement("div", null, "\xA0\xA0...")), /*#__PURE__*/React.createElement("div", {
+  }, "\xA0\xA0jz short"), " ", /*#__PURE__*/React.createElement("span", {
     style: {
-      marginTop: 28,
+      color: theme.brand
+    }
+  }, "integrity_fail")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: theme.mode === 'dark' ? '#3f3f46' : '#d4d4d4'
+    }
+  }, "\xA0\xA0...")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 32,
       fontFamily: serif,
       fontStyle: 'italic',
-      fontSize: 20,
+      fontSize: isMobile ? 17 : 19,
       color: theme.ink,
-      lineHeight: 1.4
+      lineHeight: 1.45,
+      paddingTop: 24,
+      borderTop: `1px solid ${theme.rule}`,
+      textWrap: 'pretty'
     }
   }, "\"Oh. ", /*#__PURE__*/React.createElement("span", {
     style: {
-      color: theme.accent
+      color: theme.brand,
+      fontStyle: 'normal',
+      fontWeight: 700
     }
   }, "Now"), " I know what to look for.\""))))));
 }
@@ -865,27 +1380,40 @@ function SectionEyebrow({
   num,
   text
 }) {
+  const {
+    isMobile
+  } = useResponsive();
   return /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       alignItems: 'center',
-      gap: 14,
-      marginBottom: 8
+      gap: isMobile ? 10 : 12,
+      marginBottom: 10,
+      flexWrap: 'wrap'
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
-      fontFamily: mono,
-      fontSize: 10.5,
-      letterSpacing: '0.18em',
-      color: theme.accent,
-      fontWeight: 500
+      display: 'inline-block',
+      width: 18,
+      height: 2,
+      background: theme.brand,
+      borderRadius: 2
     }
-  }, "\u2014 ", num), /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: mono,
-      fontSize: 10.5,
-      letterSpacing: '0.18em',
-      color: theme.muted
+      fontSize: 11,
+      letterSpacing: '0.2em',
+      color: theme.brand,
+      fontWeight: 600
+    }
+  }, num), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: mono,
+      fontSize: 11,
+      letterSpacing: '0.2em',
+      color: theme.muted,
+      fontWeight: 500
     }
   }, text));
 }
@@ -896,6 +1424,10 @@ function VAScrollStory({
   serif,
   mono
 }) {
+  const {
+    isMobile,
+    isTablet
+  } = useResponsive();
   const containerRef = React.useRef(null);
   const [progress, setProgress] = React.useState(0);
   React.useEffect(() => {
@@ -928,6 +1460,8 @@ function VAScrollStory({
 
   // Stanzas — each an array of words. Progress drives word-by-word reveal.
   const stanzas = [['Upload', 'a', 'strange', 'binary.'], ['Ask', 'it,', 'in', 'plain', 'English,', 'what', "it's", 'doing.'], ['Get', 'an', 'answer', '—', 'with', 'the', 'exact', 'bytes', 'to', 'prove', 'it.']];
+  const compactRows = [['Upload', 'a', 'strange', 'binary.'], ['Ask', 'it,', 'in', 'plain', 'English,'], ['what', "it's", 'doing.'], ['Get', 'an', 'answer', '—'], ['with', 'the', 'exact', 'bytes'], ['to', 'prove', 'it.']];
+  const storyRows = isTablet ? compactRows : stanzas;
   const flat = [];
   stanzas.forEach((s, si) => s.forEach((w, wi) => flat.push({
     w,
@@ -950,7 +1484,7 @@ function VAScrollStory({
   return /*#__PURE__*/React.createElement("div", {
     ref: containerRef,
     style: {
-      height: '320vh',
+      height: isMobile ? '280vh' : '320vh',
       position: 'relative',
       background: theme.bg
     }
@@ -963,7 +1497,7 @@ function VAScrollStory({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      padding: '0 48px'
+      padding: isMobile ? '0 24px' : isTablet ? '0 32px' : '0 48px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -992,17 +1526,18 @@ function VAScrollStory({
       display: 'flex',
       alignItems: 'center',
       gap: 14,
-      marginBottom: 48,
+      marginBottom: isMobile ? 30 : 48,
       fontFamily: mono,
-      fontSize: 10.5,
+      fontSize: isMobile ? 10 : 10.5,
       letterSpacing: '0.18em',
-      color: theme.muted
+      color: theme.muted,
+      flexWrap: 'wrap'
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
       color: theme.accent
     }
-  }, "\u2014 01.5"), /*#__PURE__*/React.createElement("span", null, "THE SHAPE OF A SESSION"), /*#__PURE__*/React.createElement("span", {
+  }, "\u2014 01.5"), /*#__PURE__*/React.createElement("span", null, "THE SHAPE OF A SESSION"), !isMobile && /*#__PURE__*/React.createElement("span", {
     style: {
       flex: 1,
       height: 1,
@@ -1016,22 +1551,27 @@ function VAScrollStory({
   }, String(Math.round(progress * 100)).padStart(2, '0'), "%")), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: serif,
-      fontSize: 'clamp(40px, 5.4vw, 80px)',
-      lineHeight: 1.12,
+      fontSize: isMobile ? 'clamp(31px, 9vw, 42px)' : isTablet ? 'clamp(34px, 4.2vw, 44px)' : 'clamp(40px, 5.4vw, 80px)',
+      lineHeight: isTablet ? 1.08 : 1.12,
       letterSpacing: '-0.02em',
-      fontWeight: 400,
+      fontWeight: 600,
       color: theme.ink,
       maxWidth: 1000
     }
-  }, stanzas.map((s, si) => /*#__PURE__*/React.createElement("div", {
+  }, storyRows.map((s, si) => /*#__PURE__*/React.createElement("div", {
     key: si,
     style: {
-      marginBottom: si < stanzas.length - 1 ? '0.4em' : 0
+      display: 'flex',
+      flexWrap: 'wrap',
+      columnGap: '0.28em',
+      rowGap: '0.04em',
+      marginBottom: si < storyRows.length - 1 ? isTablet ? '0.18em' : '0.4em' : 0,
+      whiteSpace: 'normal'
     }
   }, s.map((word, wi) => {
-    const globalIdx = stanzas.slice(0, si).reduce((a, b) => a + b.length, 0) + wi;
+    const globalIdx = storyRows.slice(0, si).reduce((a, b) => a + b.length, 0) + wi;
     const wp = wordProgress(globalIdx);
-    const isAccent = si === 0 && word === 'strange' || si === 1 && word === 'English,' || si === 2 && word === 'bytes';
+    const isAccent = si === 0 && word === 'strange' || word === 'English,' || word === 'bytes';
     return /*#__PURE__*/React.createElement("span", {
       key: wi,
       style: {
@@ -1039,22 +1579,22 @@ function VAScrollStory({
         opacity: 0.1 + wp * 0.9,
         transform: `translateY(${(1 - wp) * 14}px)`,
         filter: `blur(${(1 - wp) * 6}px)`,
-        color: isAccent && wp > 0.6 ? theme.accent : theme.ink,
-        fontStyle: isAccent ? 'italic' : 'normal',
-        marginRight: '0.28em',
-        transition: 'color 0.2s',
+        color: isAccent && wp > 0.42 ? theme.brand : theme.ink,
+        textShadow: isAccent && wp > 0.42 ? `0 0 22px ${theme.brandSoft}` : 'none',
+        transition: 'color 0.2s, text-shadow 0.2s',
         willChange: 'opacity, transform, filter'
       }
     }, word);
   })))), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 64,
+      marginTop: isMobile ? 40 : 64,
       display: 'flex',
-      gap: 32,
+      gap: isMobile ? 14 : 32,
       fontFamily: mono,
       fontSize: 11,
       letterSpacing: '0.06em',
-      color: theme.muted
+      color: theme.muted,
+      flexWrap: 'wrap'
     }
   }, [{
     label: 'stager_x64.elf',

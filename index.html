@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
   <!-- Production React — no dev overhead -->
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
@@ -16,9 +16,10 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    html, body { margin: 0; padding: 0; background: #f8f5ec; }
+    html, body { margin: 0; padding: 0; background: #ffffff; }
+    #root { min-height: 100vh; }
     body {
-      font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -30,10 +31,16 @@
   <div id="root"></div>
 
   <script>
-    window.__BINDER_TWEAKS__ = { dark: false, showStrips: true };
+    (function() {
+      var stored = null;
+      try { stored = localStorage.getItem('binder-theme'); } catch (err) {}
+      var dark = stored ? stored === 'dark' : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      window.__BINDER_TWEAKS__ = { dark: !!dark, showStrips: true };
+    })();
     window.__applyBinderTweaks = function() {
       document.getElementById('root').classList.toggle('binder-dark', !!window.__BINDER_TWEAKS__.dark);
-      document.body.style.background = window.__BINDER_TWEAKS__.dark ? '#141211' : '#f8f5ec';
+      document.documentElement.style.colorScheme = window.__BINDER_TWEAKS__.dark ? 'dark' : 'light';
+      document.body.style.background = window.__BINDER_TWEAKS__.dark ? '#09090b' : '#ffffff';
     };
   </script>
 

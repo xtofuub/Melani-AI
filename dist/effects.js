@@ -250,7 +250,7 @@ function RevealStagger({
 // ScrollProgress — thin amber bar pinned to top of viewport
 // ──────────────────────────────────────────────────────────
 function ScrollProgress({
-  color = '#9a3412'
+  color = '#5962B8'
 }) {
   const [p, setP] = React.useState(0);
   React.useEffect(() => {
@@ -535,10 +535,11 @@ function MagneticWrap({
 function SectionBeacon({
   ids,
   labels,
-  accent = '#9a3412',
-  ink = '#1f1b16'
+  accent = '#5962B8',
+  ink = '#000000'
 }) {
   const [active, setActive] = React.useState(0);
+  const [visible, setVisible] = React.useState(() => typeof window === 'undefined' ? true : window.innerWidth >= 1180);
   React.useEffect(() => {
     const onScroll = () => {
       const mid = window.innerHeight * 0.45;
@@ -562,6 +563,12 @@ function SectionBeacon({
     });
     return () => window.removeEventListener('scroll', onScroll);
   }, [ids]);
+  React.useEffect(() => {
+    const onResize = () => setVisible(window.innerWidth >= 1180);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+  if (!visible) return null;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'fixed',
