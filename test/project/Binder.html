@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Melani — From bytes to clarity</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <style>
+    html, body { margin: 0; padding: 0; background: #e9e6df; }
+    body { font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    * { box-sizing: border-box; }
+    em { font-style: italic; }
+    a { color: inherit; }
+
+    /* Dark mode overrides — applied via .binder-dark on the variation root */
+    .binder-dark { background: #141211 !important; color: #ece9e0 !important; }
+    .binder-dark [data-bd-paper]    { background: #1c1a18 !important; border-color: #2a2723 !important; }
+    .binder-dark [data-bd-bg]       { background: #141211 !important; }
+    .binder-dark [data-bd-ink]      { color: #ece9e0 !important; }
+    .binder-dark [data-bd-inksoft]  { color: #c7c1b2 !important; }
+    .binder-dark [data-bd-muted]    { color: #8a857a !important; }
+    .binder-dark [data-bd-rule]     { border-color: #2a2723 !important; background-color: #2a2723 !important; }
+    .binder-dark [data-bd-cream]    { background: #23201d !important; }
+
+    /* Tweaks panel */
+    .tweaks-panel {
+      position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+      background: #fffdf8; border: 1px solid #e7e2d6; border-radius: 12px;
+      padding: 14px 16px; font-family: 'Geist', sans-serif; font-size: 13px;
+      box-shadow: 0 20px 60px -20px rgba(60,40,20,0.3);
+      display: none; min-width: 240px;
+    }
+    .tweaks-panel.on { display: block; }
+    .tweaks-panel h4 { margin: 0 0 12px; font-size: 11px; letter-spacing: 0.16em; color: #78716c; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+    .tweaks-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 8px 0; }
+    .tweaks-row + .tweaks-row { border-top: 1px dashed #efeadd; }
+    .tweaks-label { color: #292524; }
+    .tweaks-toggle {
+      width: 40px; height: 22px; border-radius: 22px; background: #e7e2d6; position: relative; cursor: pointer; transition: background .2s; border: none; padding: 0;
+    }
+    .tweaks-toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 18px; background: #fff; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .tweaks-toggle.on { background: #9a3412; }
+    .tweaks-toggle.on::after { transform: translateX(18px); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <div class="tweaks-panel" id="tweaks-panel">
+    <h4>TWEAKS</h4>
+    <div class="tweaks-row">
+      <div class="tweaks-label">Dark mode</div>
+      <button id="tweak-dark" class="tweaks-toggle"></button>
+    </div>
+    <div class="tweaks-row">
+      <div class="tweaks-label">Show binary strips</div>
+      <button id="tweak-strips" class="tweaks-toggle on"></button>
+    </div>
+  </div>
+
+  <script>
+    const TWEAKS = /*EDITMODE-BEGIN*/{
+      "dark": true,
+      "showStrips": true
+    }/*EDITMODE-END*/;
+    window.__BINDER_TWEAKS__ = TWEAKS;
+
+    const applyTweaks = () => {
+      const dark = window.__BINDER_TWEAKS__.dark;
+      document.querySelectorAll('[data-variation-root]').forEach(el => {
+        el.classList.toggle('binder-dark', !!dark);
+      });
+      const strips = window.__BINDER_TWEAKS__.showStrips;
+      document.body.style.setProperty('--bd-strip-op', strips ? '1' : '0');
+    };
+
+    // edit-mode bridge
+    let editOn = false;
+    window.addEventListener('message', (e) => {
+      const d = e.data || {};
+      if (d.type === '__activate_edit_mode') { editOn = true; document.getElementById('tweaks-panel').classList.add('on'); }
+      if (d.type === '__deactivate_edit_mode') { editOn = false; document.getElementById('tweaks-panel').classList.remove('on'); }
+    });
+
+    const syncToggles = () => {
+      document.getElementById('tweak-dark').classList.toggle('on', !!TWEAKS.dark);
+      document.getElementById('tweak-strips').classList.toggle('on', !!TWEAKS.showStrips);
+    };
+
+    document.getElementById('tweak-dark').addEventListener('click', () => {
+      TWEAKS.dark = !TWEAKS.dark;
+      syncToggles(); applyTweaks();
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { dark: TWEAKS.dark } }, '*');
+    });
+    document.getElementById('tweak-strips').addEventListener('click', () => {
+      TWEAKS.showStrips = !TWEAKS.showStrips;
+      syncToggles(); applyTweaks();
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { showStrips: TWEAKS.showStrips } }, '*');
+    });
+
+    syncToggles();
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    // apply on load and whenever variations mount
+    window.__applyBinderTweaks = applyTweaks;
+  </script>
+
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="shared.jsx"></script>
+  <script type="text/babel" src="effects.jsx"></script>
+  <script type="text/babel" src="variation-a-part1.jsx"></script>
+  <script type="text/babel" src="variation-a-part2.jsx"></script>
+
+  <script type="text/babel" data-presets="react">
+    function App() {
+      React.useEffect(() => {
+        // apply tweaks once the DOM is painted
+        setTimeout(() => window.__applyBinderTweaks && window.__applyBinderTweaks(), 50);
+      });
+      return (
+        <DesignCanvas>
+          <DCSection id="variations" title="Melani — Landing" subtitle="Editorial warm aesthetic with scroll-reveals and WebGL hover field. Toggle Tweaks for dark mode.">
+            <DCArtboard id="va" label="Editorial Warm" width={1360} height={6700}>
+              <div data-variation-root>
+                <VariationA />
+              </div>
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

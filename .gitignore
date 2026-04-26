@@ -1,0 +1,4 @@
+.vercel
+node_modules/
+server-8080*.log
+output/

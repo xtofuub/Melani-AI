@@ -1,0 +1,26 @@
+{
+  "name": "melani",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "babel shared.jsx effects.jsx variation-a-part1.jsx variation-a-part2.jsx --presets @babel/preset-react --out-dir dist",
+    "dev": "npm run build && npx http-server -c-1 -p 8080",
+    "start": "npx http-server -c-1 -p 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "caveman": "^0.1.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-react": "^7.28.5"
+  }
+}
