@@ -5,7 +5,8 @@
       "Bash(gunzip -c webfetch-1776923749363-jz8kzu.bin)",
       "Bash(gunzip -c \"C:\\\\Users\\\\SB1\\\\.claude\\\\projects\\\\C--Users-SB1-Desktop-binder\\\\b11fc217-fdd3-464d-9190-1148442ae321\\\\tool-results\\\\webfetch-1776923749363-jz8kzu.bin\")",
       "Bash(tar x *)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git clone *)"
     ]
   }
 }
